@@ -59,8 +59,9 @@
     const fallback = large
       ? "linear-gradient(135deg, #2a1a0a 0%, #4a2a10 100%)"
       : "linear-gradient(135deg, #1a1a1a 0%, #2a1a0a 100%)";
+    const link = `actualite.html?slug=${encodeURIComponent(item.slug)}`;
     return `
-      <article class="news-card${large ? " news-card-large" : ""}">
+      <a href="${link}" class="news-card${large ? " news-card-large" : ""}" style="text-decoration:none;color:inherit;display:block;">
         <div class="news-img" style="${imgBg(fm.image, fallback)}"></div>
         <div class="news-overlay">
           <span class="news-cat">${fm.category || "Actualité"}</span>
@@ -68,7 +69,7 @@
           ${large && fm.excerpt ? `<p>${fm.excerpt}</p>` : ""}
           <span class="news-date">${date}</span>
         </div>
-      </article>
+      </a>
     `;
   }
 
@@ -99,7 +100,7 @@
     container.innerHTML = items
       .map(
         (item) => `
-        <article class="news-item">
+        <a href="actualite.html?slug=${encodeURIComponent(item.slug)}" class="news-item" style="text-decoration:none;color:inherit;display:block;">
           <div class="news-item-img" style="${imgBg(item.frontmatter?.image, "linear-gradient(135deg, #1a1a1a 0%, #2a1a0a 100%)")}"></div>
           <div class="news-item-body">
             <span class="news-cat">${item.frontmatter?.category || "Actualité"}</span>
@@ -107,10 +108,48 @@
             <p>${item.frontmatter?.excerpt || ""}</p>
             <span class="news-date">${formatDate(item.frontmatter?.date)}</span>
           </div>
-        </article>
+        </a>
       `,
       )
       .join("");
+  }
+
+  async function renderActualiteSingle(container) {
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("slug");
+    if (!slug) {
+      container.innerHTML = `<div class="container" style="padding: 80px 0; text-align: center;"><p style="color:#b8b8b8;">Article introuvable.</p><a href="actualites.html" class="btn btn-primary" style="margin-top: 20px;">Retour aux actualités</a></div>`;
+      return;
+    }
+    const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/content/actualites/${slug}.md`;
+    const item = await fetchMd(url, slug);
+    if (!item) {
+      container.innerHTML = `<div class="container" style="padding: 80px 0; text-align: center;"><p style="color:#b8b8b8;">Article introuvable.</p><a href="actualites.html" class="btn btn-primary" style="margin-top: 20px;">Retour aux actualités</a></div>`;
+      return;
+    }
+    const fm = item.frontmatter || {};
+    const date = formatDate(fm.date);
+    document.title = `${fm.title || "Actualité"} — Moulins-lès-Metz Handball`;
+    container.innerHTML = `
+      <section class="article-hero" style="${imgBg(fm.image, "linear-gradient(135deg, #2a1a0a 0%, #4a2a10 100%)")}min-height: 480px; display: flex; align-items: flex-end; padding: 60px 0;">
+        <div class="container">
+          <span class="news-cat" style="margin-bottom: 16px; display: inline-block;">${fm.category || "Actualité"}</span>
+          <h1 style="font-size: clamp(32px, 5vw, 64px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin: 8px 0 16px; max-width: 900px;">${fm.title || ""}</h1>
+          <div class="news-meta" style="margin-bottom: 0;">
+            <span class="news-date">${date}</span>
+            ${fm.author ? `<span class="news-author">Par ${fm.author}</span>` : ""}
+          </div>
+        </div>
+      </section>
+      <section class="article-body section">
+        <div class="container" style="max-width: 760px;">
+          <div class="prose" style="font-size: 17px; line-height: 1.8; color: var(--gray, #a8a8a8);">${item.body}</div>
+          <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <a href="actualites.html" class="link-arrow">← Retour aux actualités</a>
+          </div>
+        </div>
+      </section>
+    `;
   }
 
   async function renderActualitesFeatured(container) {
@@ -118,6 +157,7 @@
     const featured = items.find((i) => i.frontmatter?.featured) || items[0];
     if (!featured) return;
     const fm = featured.frontmatter;
+    const link = `actualite.html?slug=${encodeURIComponent(featured.slug)}`;
     container.innerHTML = `
       <div class="news-featured-img" style="${imgBg(fm.image, "linear-gradient(135deg, #2a1a0a 0%, #4a2a10 100%)")}"></div>
       <div class="news-featured-content">
@@ -128,6 +168,7 @@
           <span class="news-date">${formatDate(fm.date)}</span>
           ${fm.author ? `<span class="news-author">Par ${fm.author}</span>` : ""}
         </div>
+        <a href="${link}" class="btn btn-primary" style="margin-top: 24px;">Lire l'article</a>
       </div>
     `;
   }
@@ -214,6 +255,7 @@
       "actualites-mosaic": renderHomeNewsMosaic,
       "actualites-grid": renderActualitesGrid,
       "actualites-featured": renderActualitesFeatured,
+      "actualite-single": renderActualiteSingle,
       equipes: renderEquipes,
       matchs: renderMatchs,
     };

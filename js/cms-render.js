@@ -145,7 +145,7 @@
         </div>
       </section>
       <section class="article-body">
-        <div class="container" style="max-width: 760px;">
+        <div class="container" style="max-width: 1000px;">
           <div class="prose">${item.body}</div>
           <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08);">
             <a href="actualites.html" class="link-arrow">← Retour aux actualités</a>

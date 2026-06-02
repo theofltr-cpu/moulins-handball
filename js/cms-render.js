@@ -130,20 +130,23 @@
     const fm = item.frontmatter || {};
     const date = formatDate(fm.date);
     document.title = `${fm.title || "Actualité"} — Moulins-lès-Metz Handball`;
+    const heroStyle = fm.image
+      ? `background-image: url('${encodeURI(fm.image)}');`
+      : `background: linear-gradient(135deg, #2a1a0a 0%, #4a2a10 100%);`;
     container.innerHTML = `
-      <section class="article-hero" style="${imgBg(fm.image, "linear-gradient(135deg, #2a1a0a 0%, #4a2a10 100%)")}min-height: 480px; display: flex; align-items: flex-end; padding: 60px 0;">
+      <section class="article-hero" style="${heroStyle}">
         <div class="container">
-          <span class="news-cat" style="margin-bottom: 16px; display: inline-block;">${fm.category || "Actualité"}</span>
-          <h1 style="font-size: clamp(32px, 5vw, 64px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin: 8px 0 16px; max-width: 900px;">${fm.title || ""}</h1>
+          <span class="news-cat">${fm.category || "Actualité"}</span>
+          <h1>${fm.title || ""}</h1>
           <div class="news-meta" style="margin-bottom: 0;">
             <span class="news-date">${date}</span>
             ${fm.author ? `<span class="news-author">Par ${fm.author}</span>` : ""}
           </div>
         </div>
       </section>
-      <section class="article-body section">
+      <section class="article-body">
         <div class="container" style="max-width: 760px;">
-          <div class="prose" style="font-size: 17px; line-height: 1.8; color: var(--gray, #a8a8a8);">${item.body}</div>
+          <div class="prose">${item.body}</div>
           <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08);">
             <a href="actualites.html" class="link-arrow">← Retour aux actualités</a>
           </div>

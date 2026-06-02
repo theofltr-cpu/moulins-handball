@@ -7,6 +7,9 @@
   <title>Moulins-lès-Metz Handball — Club officiel</title>
   <meta name="description" content="Site officiel du club de handball de Moulins-lès-Metz. Équipes, calendrier, actualités, billetterie.">
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@13.0.2/marked.min.js" defer></script>
+  <script src="js/cms-render.js" defer></script>
 </head>
 <body>
 
@@ -85,7 +88,7 @@
         <a href="calendrier.html" class="link-arrow">Tout le calendrier →</a>
       </div>
 
-      <div class="matches-grid">
+      <div class="matches-grid" data-cms="matchs">
         <article class="match-card">
           <div class="match-card-head">
             <span class="match-comp">Honneur Régional</span>
@@ -166,7 +169,7 @@
         <a href="actualites.html" class="link-arrow">Toutes les actus →</a>
       </div>
 
-      <div class="news-mosaic">
+      <div class="news-mosaic" data-cms="actualites-mosaic">
         <article class="news-card news-card-large">
           <div class="news-img" style="background-image: linear-gradient(135deg, #2a1a0a 0%, #4a2a10 100%);"></div>
           <div class="news-overlay">

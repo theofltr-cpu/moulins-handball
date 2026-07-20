@@ -50,5 +50,5 @@
 - [x] Sections « À venir » et « Résultats » avec scores victoire/défaite
 - [x] Lien page Équipes -> calendrier filtré (?equipe=slug)
 - [x] Vérifié en local + en ligne (déploiement auto OK)
-- [ ] EN ATTENTE THÉO : liste officielle des équipes -> caler les options team_category dans admin/config.yml
+- [x] Liste officielle des équipes intégrée dans admin/config.yml (8 catégories) + compétition Championnat/Coupe
 - [ ] Remplacer les 4 matchs d'exemple par les vrais matchs via /admin

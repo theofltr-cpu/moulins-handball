@@ -1715,6 +1715,31 @@ a { color: inherit; text-decoration: none; }
 
 /* ========== RESPONSIVE ========== */
 
+/* ========== MENU MOBILE (burger) ========== */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Lien CTA affiché uniquement dans le menu mobile */
+.nav-cta-mobile { display: none; }
+
 @media (max-width: 1024px) {
   .news-mosaic {
     grid-template-columns: 1fr 1fr;
@@ -1747,8 +1772,44 @@ a { color: inherit; text-decoration: none; }
     gap: 16px;
     padding: 16px 20px;
   }
-  .main-nav { display: none; }
-  .header-cta { padding: 8px 14px; font-size: 11px; }
+  .site-header { position: sticky; top: 0; z-index: 300; }
+  .nav-toggle { display: flex; }
+  .main-nav {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+    background: rgba(10, 10, 10, 0.98);
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+    z-index: 200;
+  }
+  .main-nav a { font-size: 22px; color: #fff; }
+  .nav-cta-mobile {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 14px 32px;
+    background: var(--orange);
+    color: #fff !important;
+    border-radius: 999px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  body.nav-open { overflow: hidden; }
+  body.nav-open .main-nav { transform: translateX(0); }
+  /* CTA masqué dans la barre mobile (accessible via le menu) */
+  .header-cta { display: none; }
+  /* burger -> croix */
+  body.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  body.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+  body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   .hero { min-height: 80vh; }
   .hero-inner { padding: 60px 20px; }
   .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 24px; }

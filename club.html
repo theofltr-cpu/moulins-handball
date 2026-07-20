@@ -32,15 +32,19 @@
           <strong>Moulins-lès-Metz</strong>
         </span>
       </a>
-      <nav class="main-nav">
+      <nav class="main-nav" id="main-nav">
         <a href="index.html">Accueil</a>
         <a href="club.html" class="active">Le Club</a>
         <a href="equipes.html">Équipes</a>
         <a href="calendrier.html">Calendrier</a>
         <a href="actualites.html">Actualités</a>
         <a href="contact.html">Contact</a>
+        <a href="{{site.cta_url}}" class="nav-cta-mobile">{{site.cta_label}}</a>
       </nav>
       <a href="{{site.cta_url}}" class="header-cta">{{site.cta_label}}</a>
+      <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 
@@ -189,5 +193,6 @@
     </div>
   </footer>
 
+  <script src="js/nav.js" defer></script>
 </body>
 </html>

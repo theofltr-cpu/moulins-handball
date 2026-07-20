@@ -574,8 +574,9 @@ function build() {
       return html;
     },
     "actualites.html": (html) => {
+      const featured = actualites.find((i) => i.frontmatter?.featured) || actualites[0];
       html = injectCms(html, "actualites-featured", renderActualitesFeatured(actualites));
-      html = injectCms(html, "actualites-grid", renderActualitesGrid(actualites));
+      html = injectCms(html, "actualites-grid", renderActualitesGrid(actualites.filter((i) => i !== featured)));
       return html;
     },
     "equipes.html": (html) => injectCms(html, "equipes", renderEquipes(equipes)),

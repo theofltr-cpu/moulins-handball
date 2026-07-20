@@ -42,3 +42,13 @@
 - [x] Mettre à jour le workflow GitHub Actions (build avant deploy)
 - [x] Push + vérifier l'Action et le site en ligne
 - [ ] Test de bout en bout via /admin
+
+## Phase 4 — Calendrier segmenté par équipe (2026-07-20)
+
+- [x] Moteur de calendrier data-driven (build.js renderCalendar)
+- [x] Filtres par équipe auto-générés + filtrage client (js/calendar-filter.js)
+- [x] Sections « À venir » et « Résultats » avec scores victoire/défaite
+- [x] Lien page Équipes -> calendrier filtré (?equipe=slug)
+- [x] Vérifié en local + en ligne (déploiement auto OK)
+- [ ] EN ATTENTE THÉO : liste officielle des équipes -> caler les options team_category dans admin/config.yml
+- [ ] Remplacer les 4 matchs d'exemple par les vrais matchs via /admin

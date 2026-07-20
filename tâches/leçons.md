@@ -77,3 +77,18 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 **Why :** une config CMS invalide rend le backoffice totalement inutilisable pour l'utilisateur, même si le site public fonctionne. Le YAML « valide » ne suffit pas — il faut valider les règles métier de Sveltia (unicité des noms).
 
 **How to apply :** après édition de admin/config.yml → 1) grep des noms, 2) script de validation unicité, 3) ouverture réelle de /admin dans le navigateur pour confirmer l'absence d'écran d'erreur.
+
+---
+
+## Technique / Déploiement (git push + GitHub Actions)
+
+### Après un push qui passe par le fallback rebase, retrouver le run par son SHA (pas --limit 1)
+
+**Contexte :** mon one-liner `git push || (git pull --rebase && git push)` a réécrit le SHA du commit. `gh run watch` lancé avec `gh run list --limit 1` s'est accroché à un ANCIEN run (commit précédent) déjà terminé « success », me faisant croire que c'était déployé. En réalité mon vrai commit n'était pas encore (ou pas) déployé — le site en ligne restait inchangé pendant plusieurs minutes.
+
+**Règle :**
+- Après push, récupérer le SHA local (`git rev-parse --short HEAD`) et trouver le run correspondant : `gh run list --json headSha,databaseId --jq 'select(.headSha startswith SHA)'`, PAS `--limit 1`.
+- Vérifier la propagation en ligne avec un marqueur unique de la modif (cache-bust), et si le contenu ne bouge pas après ~1 min, soupçonner que le bon run n'a pas tourné (et non le cache).
+- En cas de doute : commit vide `git commit --allow-empty` pour re-déclencher un déploiement propre du HEAD courant.
+
+**Why :** croire à tort qu'un déploiement a eu lieu fait perdre du temps et donne une fausse validation « en ligne ».

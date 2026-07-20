@@ -69,3 +69,13 @@
 - [x] Moteur de jetons + rendu listes (bureau, chiffres) vérifiés en local
 - [ ] EN ATTENTE THÉO : créer un formulaire Formspree -> me donner l'URL (formulaire de contact)
 - [ ] THÉO via /admin : corriger les chiffres réels (8 équipes, ~170 licenciés), remplir bureau, réseaux
+
+## Phase 7 — Ajustements équipes/matchs/partenaires (2026-07-20)
+
+- [x] Équipes : coach uniquement (retrait horaires + gymnase)
+- [x] Matchs : 8 placeholders « à venir » (un par catégorie) en attendant les vrais calendriers
+- [x] Partenaires : section accueil dynamique (logos ajoutables via /admin)
+- [x] FIX injectCms (imbrication) — supprime les fausses actus/matchs résiduels
+- [ ] THÉO : ajouter les logos partenaires via /admin (collection Partenaires)
+- [ ] THÉO : donnera les vrais matchs quand les calendriers sortent
+- [ ] THÉO : récupérer les anciennes actus de l'ancien site + composition du bureau (à me transmettre)

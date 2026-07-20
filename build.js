@@ -147,16 +147,17 @@ function renderEquipes(items) {
   return sorted
     .map((item) => {
       const fm = item.frontmatter || {};
+      const calSlug = slugifyTeam(fm.name || `${fm.category || ""} ${fm.gender || ""}`);
       return `
-        <article class="team-tile">
+        <a href="/calendrier.html?equipe=${calSlug}" class="team-tile" style="text-decoration:none;color:inherit;display:block;">
           <div class="team-tile-img" style="${imgBg(fm.photo, "linear-gradient(135deg, #F26522 0%, #c44d12 100%)")}"></div>
           <div class="team-tile-content">
             <span class="team-tile-cat">${fm.championship || fm.category || ""}</span>
             <h3>${fm.name || ""}</h3>
             <p class="team-tile-meta">${fm.coach ? "Coach : " + fm.coach : ""}</p>
-            <span class="team-tile-link">Voir l'équipe →</span>
+            <span class="team-tile-link">Voir le calendrier →</span>
           </div>
-        </article>
+        </a>
       `;
     })
     .join("");
@@ -206,6 +207,141 @@ function renderMatchs(items) {
       `;
     })
     .join("");
+}
+
+/* ---------- Calendrier segmenté par équipe ---------- */
+
+function slugifyTeam(cat) {
+  return (cat || "autres")
+    .toString()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "") // accents
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "autres";
+}
+
+/** Ordre naturel : séniors d'abord, puis catégories jeunes par âge décroissant. */
+function teamRank(cat) {
+  const c = (cat || "").toLowerCase();
+  if (c.includes("senior") || c.includes("sénior")) return 0;
+  const m = c.match(/-?(\d+)/);
+  if (m) return 100 - parseInt(m[1], 10); // -18 avant -15 avant -13...
+  return 200;
+}
+
+function distinctTeams(matchs) {
+  const seen = new Map();
+  for (const it of matchs) {
+    const cat = it.frontmatter?.team_category;
+    if (cat && !seen.has(cat)) seen.set(cat, slugifyTeam(cat));
+  }
+  return [...seen.entries()]
+    .map(([label, slug]) => ({ label, slug }))
+    .sort((a, b) => teamRank(a.label) - teamRank(b.label) || a.label.localeCompare(b.label, "fr"));
+}
+
+function calDateParts(iso) {
+  if (!iso) return { day: "", num: "", time: "" };
+  const d = new Date(iso);
+  const day = d
+    .toLocaleDateString("fr-FR", { weekday: "short" })
+    .replace(".", "")
+    .toUpperCase();
+  const num = d.toLocaleDateString("fr-FR", { day: "numeric" });
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return { day, num, time: `${hh}H${mm}` };
+}
+
+function renderCalRow(item, { showScore }) {
+  const fm = item.frontmatter || {};
+  const { day, num, time } = calDateParts(fm.date);
+  const home = fm.home_team || "Moulins-lès-Metz";
+  const away = fm.away_team || "?";
+  const homeIsUs = home.toLowerCase().includes("moulins");
+  const slug = slugifyTeam(fm.team_category);
+
+  let middle;
+  if (showScore && fm.home_score != null && fm.away_score != null) {
+    const usScore = homeIsUs ? fm.home_score : fm.away_score;
+    const themScore = homeIsUs ? fm.away_score : fm.home_score;
+    const outcome =
+      usScore > themScore ? "win" : usScore < themScore ? "loss" : "draw";
+    middle = `
+            <span class="cal-team${homeIsUs ? " home" : ""}">${home}</span>
+            <span class="cal-score cal-score-${outcome}">${fm.home_score}<span class="cal-score-sep">–</span>${fm.away_score}</span>
+            <span class="cal-team${!homeIsUs ? " home" : ""}">${away}</span>`;
+  } else {
+    middle = `
+            <span class="cal-team${homeIsUs ? " home" : ""}">${home}</span>
+            <span class="cal-vs">VS</span>
+            <span class="cal-team${!homeIsUs ? " home" : ""}">${away}</span>`;
+  }
+
+  return `
+        <article class="cal-row" data-team="${slug}">
+          <div class="cal-date">
+            <span class="cal-day">${day}</span>
+            <span class="cal-num">${num}</span>
+            <span class="cal-time">${time}</span>
+          </div>
+          <div class="cal-comp">
+            <span class="match-comp">${fm.competition || ""}</span>
+            <span class="cal-cat">${fm.team_category || ""}</span>
+          </div>
+          <div class="cal-teams">${middle}
+          </div>
+          <div class="cal-place">${fm.venue || ""}</div>
+        </article>`;
+}
+
+function renderCalendar(matchs) {
+  if (matchs.length === 0) return null;
+
+  const teams = distinctTeams(matchs);
+  const isPlayed = (i) => i.frontmatter?.status === "Joué";
+
+  const upcoming = matchs
+    .filter((i) => !isPlayed(i))
+    .sort((a, b) => new Date(a.frontmatter?.date || 0) - new Date(b.frontmatter?.date || 0));
+  const results = matchs
+    .filter(isPlayed)
+    .sort((a, b) => new Date(b.frontmatter?.date || 0) - new Date(a.frontmatter?.date || 0));
+
+  const filters =
+    `<button class="filter-btn active" data-team="all">Toutes les équipes</button>` +
+    teams
+      .map((t) => `<button class="filter-btn" data-team="${t.slug}">${t.label}</button>`)
+      .join("");
+
+  const section = (eyebrow, title, rows, { showScore = false, extraClass = "" } = {}) => {
+    if (rows.length === 0) return "";
+    return `
+      <section class="section${extraClass}" data-cal-section>
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">${eyebrow}</span>
+              <h2>${title}</h2>
+            </div>
+          </div>
+          <div class="cal-list">${rows.map((r) => renderCalRow(r, { showScore })).join("")}
+          </div>
+        </div>
+      </section>`;
+  };
+
+  return `
+    <section class="section-filters">
+      <div class="container">
+        <div class="filters" data-cal-filters>${filters}
+        </div>
+      </div>
+    </section>
+    ${section("Matchs à venir", "Prochains matchs", upcoming)}
+    ${section("Résultats", "Derniers résultats", results, { showScore: true, extraClass: " section-alt" })}
+  `;
 }
 
 function renderArticleInner(item) {
@@ -318,6 +454,7 @@ function build() {
       return html;
     },
     "equipes.html": (html) => injectCms(html, "equipes", renderEquipes(equipes)),
+    "calendrier.html": (html) => injectCms(html, "calendrier", renderCalendar(matchs)),
   };
 
   for (const [file, transform] of Object.entries(pages)) {

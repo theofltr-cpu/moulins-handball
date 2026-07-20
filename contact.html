@@ -37,8 +37,8 @@
   <section class="page-hero">
     <div class="container">
       <span class="eyebrow">Contact</span>
-      <h1>Une question ? <span class="accent">Écris-nous</span></h1>
-      <p>Pour rejoindre le club, sponsoriser une équipe ou simplement échanger, contactez-nous via le formulaire ou directement.</p>
+      <h1>{{contact.hero_title}} <span class="accent">{{contact.hero_accent}}</span></h1>
+      <p>{{contact.hero_intro}}</p>
     </div>
   </section>
 
@@ -52,7 +52,7 @@
           <h2>Envoie-nous un message</h2>
           <p class="form-intro">Une réponse sous 48h ouvrées.</p>
 
-          <form class="contact-form" onsubmit="event.preventDefault(); alert('Formulaire à connecter à un service d\'envoi (Formspree, Netlify Forms, etc.)');">
+          {{contact.form_open}}
             <div class="form-row">
               <div class="form-field">
                 <label for="firstname">Prénom</label>
@@ -100,17 +100,17 @@
 
           <div class="contact-block">
             <strong>Adresse principale</strong>
-            <p>Gymnase de Frescaty<br>57160 Moulins-lès-Metz</p>
+            <p>{{site.gymnase}}<br>{{site.ville}}</p>
           </div>
 
           <div class="contact-block">
             <strong>Email</strong>
-            <p><a href="mailto:contact@moulinshandball.com">contact@moulinshandball.com</a></p>
+            <p><a href="mailto:{{site.email}}">{{site.email}}</a></p>
           </div>
 
           <div class="contact-block">
             <strong>Président</strong>
-            <p>Stéphane Duchene<br><span class="muted">Téléphone à compléter</span></p>
+            <p>{{contact.president}}<br><span class="muted">{{contact.president_tel}}</span></p>
           </div>
 
           <div class="contact-block">

@@ -48,8 +48,8 @@
   <section class="page-hero">
     <div class="container">
       <span class="eyebrow">Le Club</span>
-      <h1>40 ans de passion <span class="accent">handball</span></h1>
-      <p>De ses premières années aux championnats régionaux d'aujourd'hui, le club construit chaque saison son histoire avec les mêmes valeurs : engagement, partage, exigence.</p>
+      <h1>{{club.hero_title}} <span class="accent">{{club.hero_accent}}</span></h1>
+      <p>{{club.hero_intro}}</p>
     </div>
   </section>
 
@@ -59,12 +59,10 @@
       <div class="two-col">
         <div>
           <span class="eyebrow">Notre histoire</span>
-          <h2>Un club, une famille</h2>
+          <h2>{{club.histoire_titre}}</h2>
         </div>
         <div class="prose">
-          <p>Fondé dans les années 80 par des passionnés de handball de Moulins-lès-Metz, le club s'est progressivement structuré pour proposer aujourd'hui une école de hand complète et des équipes engagées en compétition à tous les niveaux.</p>
-          <p>De l'éveil sportif des plus jeunes aux championnats séniors, nous accueillons les pratiquants de tous âges autour d'un projet sportif solide : la formation, l'engagement collectif et le plaisir du jeu.</p>
-          <p>Le club compte aujourd'hui plus de <strong>200 licenciés</strong>, encadrés par une équipe de bénévoles et d'éducateurs diplômés. Affilié à la Fédération Française de Handball, il est reconnu pour son sérieux et sa convivialité.</p>
+          {{club.histoire}}
         </div>
       </div>
     </div>
@@ -113,31 +111,8 @@
           <h2>L'équipe dirigeante</h2>
         </div>
       </div>
-      <div class="people-grid">
-        <article class="person-card">
-          <div class="person-avatar"></div>
-          <h3>Stéphane Duchene</h3>
-          <span class="person-role">Président</span>
-          <p>Référent général du club. Coordination, projet sportif et relations institutionnelles.</p>
-        </article>
-        <article class="person-card">
-          <div class="person-avatar"></div>
-          <h3>Nom à compléter</h3>
-          <span class="person-role">Vice-Président</span>
-          <p>Soutien à la présidence et pilotage des projets transversaux.</p>
-        </article>
-        <article class="person-card">
-          <div class="person-avatar"></div>
-          <h3>Nom à compléter</h3>
-          <span class="person-role">Secrétaire</span>
-          <p>Gestion administrative, licences FFHB et communication interne.</p>
-        </article>
-        <article class="person-card">
-          <div class="person-avatar"></div>
-          <h3>Nom à compléter</h3>
-          <span class="person-role">Trésorier</span>
-          <p>Gestion financière, subventions et partenariats sponsors.</p>
-        </article>
+      <div class="people-grid" data-cms="bureau">
+        <p style="color:#b8b8b8;">Le bureau sera bientôt en ligne.</p>
       </div>
     </div>
   </section>
@@ -151,23 +126,8 @@
           <h2>Les chiffres du club</h2>
         </div>
       </div>
-      <div class="infos-grid">
-        <div class="info-card">
-          <div class="info-num">+200</div>
-          <div class="info-label">Licenciés</div>
-        </div>
-        <div class="info-card">
-          <div class="info-num">12</div>
-          <div class="info-label">Équipes engagées</div>
-        </div>
-        <div class="info-card">
-          <div class="info-num">3</div>
-          <div class="info-label">Gymnases utilisés</div>
-        </div>
-        <div class="info-card">
-          <div class="info-num">15</div>
-          <div class="info-label">Bénévoles actifs</div>
-        </div>
+      <div class="infos-grid" data-cms="chiffres">
+        <p style="color:#b8b8b8;">Les chiffres seront bientôt en ligne.</p>
       </div>
     </div>
   </section>

@@ -52,9 +52,45 @@ function readSettings(file) {
 
 function flatten(prefix, obj, out) {
   for (const [k, v] of Object.entries(obj || {})) {
+    if (v && typeof v === "object") continue; // les listes (bureau, chiffres) sont rendues à part
     out[`${prefix}.${k}`] = v == null ? "" : String(v);
   }
   return out;
+}
+
+function readPage(file) {
+  const p = path.join(ROOT, "content", "pages", file);
+  if (!fs.existsSync(p)) return {};
+  const m = fs.readFileSync(p, "utf8").match(/^---\r?\n([\s\S]+?)\r?\n---/);
+  return m ? yaml.load(m[1]) || {} : {};
+}
+
+function renderBureau(list) {
+  if (!Array.isArray(list) || list.length === 0) return null;
+  return list
+    .map(
+      (p) => `
+        <article class="person-card">
+          <div class="person-avatar"></div>
+          <h3>${p.name || ""}</h3>
+          <span class="person-role">${p.role || ""}</span>
+          <p>${p.note || ""}</p>
+        </article>`,
+    )
+    .join("");
+}
+
+function renderChiffres(list) {
+  if (!Array.isArray(list) || list.length === 0) return null;
+  return list
+    .map(
+      (c) => `
+        <div class="info-card">
+          <div class="info-num">${c.valeur || ""}</div>
+          <div class="info-label">${c.label || ""}</div>
+        </div>`,
+    )
+    .join("");
 }
 
 function applyTokens(html, map) {
@@ -478,6 +514,7 @@ function build() {
   const actualites = sortByDateDesc(loadCollection("actualites"));
   const equipes = loadCollection("equipes");
   const matchs = loadCollection("matchs");
+  const clubPage = readPage("club.md");
   console.log(
     `Contenus : ${actualites.length} actu(s), ${equipes.length} équipe(s), ${matchs.length} match(s)`,
   );
@@ -496,6 +533,11 @@ function build() {
     },
     "equipes.html": (html) => injectCms(html, "equipes", renderEquipes(equipes)),
     "calendrier.html": (html) => injectCms(html, "calendrier", renderCalendar(matchs)),
+    "club.html": (html) => {
+      html = injectCms(html, "bureau", renderBureau(clubPage.bureau));
+      html = injectCms(html, "chiffres", renderChiffres(clubPage.chiffres));
+      return html;
+    },
   };
 
   for (const [file, transform] of Object.entries(pages)) {
@@ -534,6 +576,15 @@ function build() {
   const tokenMap = {};
   flatten("site", readSettings("site.md"), tokenMap);
   flatten("accueil", readSettings("accueil.md"), tokenMap);
+  flatten("club", clubPage, tokenMap);
+  tokenMap["club.histoire"] = marked.parse(clubPage.histoire || "");
+
+  const contactPage = readPage("contact.md");
+  flatten("contact", contactPage, tokenMap);
+  const email = tokenMap["site.email"] || "";
+  tokenMap["contact.form_open"] = contactPage.formspree
+    ? `<form class="contact-form" action="${contactPage.formspree}" method="POST">`
+    : `<form class="contact-form" onsubmit="event.preventDefault(); alert('Le formulaire sera bientôt actif. En attendant, écrivez-nous à ${email}.');">`;
   let tokenPages = 0;
   for (const file of listHtml(DIST)) {
     const before = fs.readFileSync(file, "utf8");

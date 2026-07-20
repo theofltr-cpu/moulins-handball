@@ -59,3 +59,13 @@
 - [x] 8 fiches d'équipes créées, reliées chacune à son calendrier filtré
 - [x] Page Équipes dynamique (plus de contenu factice) + vérifiée en ligne
 - [ ] À FAIRE PAR THÉO via /admin : remplir coach / horaires / gymnase + ajouter les photos d'équipes
+
+## Phase 6 — Tout éditable via backoffice (2026-07-20)
+
+- [x] Réglages du site (bandeau, footer, coordonnées, réseaux, bouton) éditables
+- [x] Page d'accueil (hero + 4 chiffres) éditable
+- [x] Page Le Club (hero, histoire, bureau, chiffres) éditable
+- [x] Page Contact (hero, coordonnées, président) éditable + formulaire prêt pour Formspree
+- [x] Moteur de jetons + rendu listes (bureau, chiffres) vérifiés en local
+- [ ] EN ATTENTE THÉO : créer un formulaire Formspree -> me donner l'URL (formulaire de contact)
+- [ ] THÉO via /admin : corriger les chiffres réels (8 équipes, ~170 licenciés), remplir bureau, réseaux

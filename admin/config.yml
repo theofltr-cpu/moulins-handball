@@ -53,6 +53,45 @@ collections:
           - { name: stat4_valeur, label: "Chiffre 4 — valeur", widget: string }
           - { name: stat4_label, label: "Chiffre 4 — libellé", widget: string }
 
+  - name: pages
+    label: Pages (Club & Contact)
+    delete: false
+    files:
+      - name: club
+        label: Page Le Club
+        file: content/pages/club.md
+        fields:
+          - { name: hero_title, label: "Titre principal", widget: string }
+          - { name: hero_accent, label: "Titre — mot en orange", widget: string }
+          - { name: hero_intro, label: "Phrase d'introduction", widget: text }
+          - { name: histoire_titre, label: "Histoire — titre", widget: string }
+          - { name: histoire, label: "Histoire — texte", widget: markdown }
+          - name: bureau
+            label: Bureau du club
+            label_singular: Membre
+            widget: list
+            fields:
+              - { name: name, label: Nom, widget: string }
+              - { name: role, label: Rôle, widget: string }
+              - { name: note, label: Description, widget: text, required: false }
+          - name: chiffres
+            label: Chiffres du club
+            label_singular: Chiffre
+            widget: list
+            fields:
+              - { name: valeur, label: Valeur, widget: string }
+              - { name: label, label: Libellé, widget: string }
+      - name: contact
+        label: Page Contact
+        file: content/pages/contact.md
+        fields:
+          - { name: hero_title, label: "Titre principal", widget: string }
+          - { name: hero_accent, label: "Titre — mot en orange", widget: string }
+          - { name: hero_intro, label: "Phrase d'introduction", widget: text }
+          - { name: president, label: "Président — nom", widget: string, required: false }
+          - { name: president_tel, label: "Président — téléphone", widget: string, required: false }
+          - { name: formspree, label: "URL Formspree du formulaire", widget: string, required: false, hint: "Colle ici l'URL Formspree (https://formspree.io/f/xxxx). Vide = formulaire inactif." }
+
   - name: actualites
     label: Actualités
     label_singular: Actualité

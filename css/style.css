@@ -1146,6 +1146,27 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 14px;
 }
 
+.team-tile-infos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0 16px;
+}
+.team-tile-info {
+  font-size: 13px;
+  color: var(--gray-2);
+  line-height: 1.4;
+}
+.team-tile-info strong {
+  display: inline-block;
+  min-width: 96px;
+  color: var(--orange);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
 /* ========== CAT HEAD (catégories d'équipes) ========== */
 
 .cat-head {

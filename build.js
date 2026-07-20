@@ -148,13 +148,18 @@ function renderEquipes(items) {
     .map((item) => {
       const fm = item.frontmatter || {};
       const calSlug = slugifyTeam(fm.name || `${fm.category || ""} ${fm.gender || ""}`);
+      const infos = [
+        fm.coach ? `<span class="team-tile-info"><strong>Coach</strong> ${fm.coach}</span>` : "",
+        fm.schedule ? `<span class="team-tile-info"><strong>Entraînement</strong> ${fm.schedule}</span>` : "",
+        fm.venue ? `<span class="team-tile-info"><strong>Gymnase</strong> ${fm.venue}</span>` : "",
+      ].join("");
       return `
         <a href="/calendrier.html?equipe=${calSlug}" class="team-tile" style="text-decoration:none;color:inherit;display:block;">
           <div class="team-tile-img" style="${imgBg(fm.photo, "linear-gradient(135deg, #F26522 0%, #c44d12 100%)")}"></div>
           <div class="team-tile-content">
-            <span class="team-tile-cat">${fm.championship || fm.category || ""}</span>
+            <span class="team-tile-cat">${fm.championship || ""}</span>
             <h3>${fm.name || ""}</h3>
-            <p class="team-tile-meta">${fm.coach ? "Coach : " + fm.coach : ""}</p>
+            <div class="team-tile-infos">${infos}</div>
             <span class="team-tile-link">Voir le calendrier →</span>
           </div>
         </a>

@@ -36,9 +36,9 @@
 
 ## Phase 3 — Performance backoffice (2026-07-20)
 
-- [ ] Créer package.json + build.js (rendu statique au déploiement)
-- [ ] Tester le build en local (dist/ correct)
-- [ ] Vérifier visuellement les pages générées
-- [ ] Mettre à jour le workflow GitHub Actions (build avant deploy)
-- [ ] Push + vérifier l'Action et le site en ligne
+- [x] Créer package.json + build.js (rendu statique au déploiement)
+- [x] Tester le build en local (dist/ correct)
+- [x] Vérifier visuellement les pages générées
+- [x] Mettre à jour le workflow GitHub Actions (build avant deploy)
+- [x] Push + vérifier l'Action et le site en ligne
 - [ ] Test de bout en bout via /admin

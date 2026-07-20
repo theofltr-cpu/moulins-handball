@@ -34,3 +34,29 @@ Notes pour ne pas refaire les mêmes erreurs.
 **Why :** un débutant en dev n'a pas les repères pour trancher entre 4 stacks techniques. Il a besoin que je tranche pour lui après avoir compris ses contraintes — pas que je lui demande de choisir dans un menu.
 
 **How to apply :** avant tout comparatif >2 options → poser **1 question de cadrage** sur le critère le plus discriminant. Exemple : "tu paies combien aujourd'hui sur Wix ?" trance entre "on reste / on migre" sans même lister d'alternatives.
+
+---
+
+## Migration / Validation end-to-end
+
+### Ne pas lancer une migration de plateforme pour UNE fonctionnalité sans avoir vérifié toute la chaîne
+
+**Contexte :** une fois le site Cloudflare + Sveltia CMS qui marchait bien, l'utilisateur a demandé une auth par email (pas GitHub) pour son bureau. J'ai proposé de migrer vers Netlify (qui propose "Netlify Identity") sans avoir vérifié :
+1. que Netlify Identity est encore disponible facilement pour les nouveaux comptes (ils sont en train de le déprécier)
+2. que la chaîne complète (Identity → Registration preferences → Services → Git Gateway → Invitation → test) tient en peu de clics
+3. quel chemin alternatif on aurait sur Cloudflare (Cloudflare Access existait et était plus simple)
+
+Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'est perdu dans une UI où la moitié des options étaient absentes/cachées. Au bout de plusieurs allers-retours, il a dit "on arrête, retour Cloudflare". Du temps perdu, de la fatigue inutile, et la confiance entamée.
+
+**Règle :**
+- Avant de proposer une **migration de plateforme** pour résoudre un seul besoin → vérifier que **la chaîne complète tient debout** : auth, déploiement, contenu, sécurité, scaling, retour arrière.
+- Tester soi-même le chemin de bout en bout (au moins en lecture des docs récentes) avant d'embarquer l'utilisateur. Une feature présente dans la doc ≠ une feature facile à activer en 2026.
+- Pour un besoin auxiliaire (auth, formulaires, etc.), explorer d'abord les **solutions sur place** avant de proposer de tout déménager. Sur Cloudflare il y avait **Cloudflare Access** qui résolvait pareil sans rien casser — je n'y ai pas pensé en premier.
+
+**Why :** migrer une plateforme = effort 10x supérieur à activer une feature sur la plateforme actuelle. Si je ne sais pas avec certitude que la nouvelle plateforme tient toutes les promesses, je condamne l'utilisateur à un parcours du combattant pour rien.
+
+**How to apply :** dès que je propose "on déménage vers X pour avoir Y" → réponse à me poser AVANT d'envoyer :
+1. Est-ce que Y est confirmé encore actif sur X **aujourd'hui** (pas dans la doc de 2022) ?
+2. Combien d'étapes de config Y nécessite sur X ? (idéalement ≤3)
+3. Existe-t-il une solution équivalente à Y sur la plateforme actuelle ? Si oui, proposer ÇA d'abord.
+4. Si la réponse à (1) ou (2) est incertaine, dire à l'utilisateur "je vérifie d'abord, je reviens" — pas le faire créer un compte tout de suite.

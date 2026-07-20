@@ -1,0 +1,13 @@
+{
+  "name": "moulins-handball",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Site du club Moulins-lès-Metz Handball — build statique du contenu CMS",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "marked": "^13.0.2"
+  }
+}

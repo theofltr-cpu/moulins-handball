@@ -60,3 +60,20 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 2. Combien d'étapes de config Y nécessite sur X ? (idéalement ≤3)
 3. Existe-t-il une solution équivalente à Y sur la plateforme actuelle ? Si oui, proposer ÇA d'abord.
 4. Si la réponse à (1) ou (2) est incertaine, dire à l'utilisateur "je vérifie d'abord, je reviens" — pas le faire créer un compte tout de suite.
+
+---
+
+## Technique / Sveltia CMS (admin/config.yml)
+
+### Vérifier l'unicité des noms de collections AVANT d'en ajouter une
+
+**Contexte :** en ajoutant une collection `- name: pages` (Club & Contact), je n'ai pas vu qu'une collection `pages` (« Pages fixes ») existait déjà dans admin/config.yml. Sveltia CMS refuse les noms de collection dupliqués → **tout le backoffice /admin tombe en erreur** (« Collection names must be unique »), pas juste la section concernée. L'utilisateur a signalé « l'accès admin ne fonctionne pas » ; ce n'était pas l'OAuth mais ce doublon.
+
+**Règle :**
+- Avant d'ajouter une collection dans admin/config.yml : `grep "name:" admin/config.yml` pour vérifier qu'aucune n'a déjà ce nom.
+- Après toute modif de config.yml : valider avec un script Node qui charge le YAML ET vérifie l'unicité des `collections[].name` (fait dans cette session).
+- Une erreur de config Sveltia casse TOUT l'écran, pas une partie → toujours ouvrir /admin (screenshot navigateur) après une modif de config, pas seulement vérifier le rendu du site.
+
+**Why :** une config CMS invalide rend le backoffice totalement inutilisable pour l'utilisateur, même si le site public fonctionne. Le YAML « valide » ne suffit pas — il faut valider les règles métier de Sveltia (unicité des noms).
+
+**How to apply :** après édition de admin/config.yml → 1) grep des noms, 2) script de validation unicité, 3) ouverture réelle de /admin dans le navigateur pour confirmer l'absence d'écran d'erreur.

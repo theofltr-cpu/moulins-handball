@@ -63,8 +63,9 @@ collections:
     sortable_fields: [date]
     fields:
       - { name: date, label: Date et heure du match, widget: datetime, format: "YYYY-MM-DDTHH:mm", date_format: "DD/MM/YYYY", time_format: "HH:mm" }
-      - { name: competition, label: Compétition, widget: string, hint: "Ex : Honneur Régional, Coupe Moselle 1/8, etc." }
-      - { name: team_category, label: Catégorie d'équipe, widget: select, options: ["Séniors Garçons", "Séniors Filles", "-18 Garçons", "-18 Filles", "-15 Garçons", "-15 Filles", "-13 Garçons", "-13 Filles", "-11 Mixte", "-9 Mixte"] }
+      - { name: competition, label: Compétition, widget: select, options: ["Championnat", "Coupe"], default: "Championnat" }
+      - { name: competition_detail, label: "Précision compétition (optionnel)", widget: string, required: false, hint: "Ex : Honneur Régional, Coupe de Moselle 1/8 — laisser vide si inutile" }
+      - { name: team_category, label: Catégorie d'équipe, widget: select, options: ["-11 Garçons", "-11 Filles", "-13 Garçons", "-15 Filles", "-17 Garçons", "Séniors Filles", "Séniors 1 Garçons", "Séniors 2 Garçons"] }
       - { name: home_team, label: Équipe à domicile, widget: string, default: "Moulins-lès-Metz" }
       - { name: away_team, label: Équipe à l'extérieur, widget: string }
       - { name: venue, label: Lieu / Gymnase, widget: string }

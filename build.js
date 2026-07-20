@@ -185,7 +185,7 @@ function renderMatchs(items) {
       return `
         <article class="match-card">
           <div class="match-card-head">
-            <span class="match-comp">${fm.competition || ""}</span>
+            <span class="match-comp">${compLabel(fm)}</span>
             <span class="match-date">${dateStr}${time ? " · " + time : ""}</span>
           </div>
           <div class="match-teams">
@@ -210,6 +210,12 @@ function renderMatchs(items) {
 }
 
 /* ---------- Calendrier segmenté par équipe ---------- */
+
+function compLabel(fm) {
+  const base = fm.competition || "";
+  const detail = fm.competition_detail;
+  return detail ? `${base} · ${detail}` : base;
+}
 
 function slugifyTeam(cat) {
   return (cat || "autres")
@@ -287,7 +293,7 @@ function renderCalRow(item, { showScore }) {
             <span class="cal-time">${time}</span>
           </div>
           <div class="cal-comp">
-            <span class="match-comp">${fm.competition || ""}</span>
+            <span class="match-comp">${compLabel(fm)}</span>
             <span class="cal-cat">${fm.team_category || ""}</span>
           </div>
           <div class="cal-teams">${middle}

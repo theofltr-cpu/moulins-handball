@@ -31,7 +31,7 @@
         <a href="actualites.html">Actualités</a>
         <a href="contact.html">Contact</a>
       </nav>
-      <a href="contact.html" class="header-cta">Nous rejoindre</a>
+      <a href="{{site.cta_url}}" class="header-cta">{{site.cta_label}}</a>
     </div>
   </header>
 
@@ -41,10 +41,10 @@
     <div class="hero-overlay"></div>
     <div class="container hero-inner">
       <h1>
-        <span class="hero-line-1">Moulins-lès-Metz</span>
-        <span class="hero-line-2">Handball</span>
+        <span class="hero-line-1">{{accueil.hero_ligne1}}</span>
+        <span class="hero-line-2">{{accueil.hero_ligne2}}</span>
       </h1>
-      <p class="hero-sub">L'esprit du jeu. La force du collectif. La fierté d'un club.</p>
+      <p class="hero-sub">{{accueil.hero_sous_titre}}</p>
       <div class="hero-cta">
         <a href="equipes.html" class="btn btn-primary">Découvrir les équipes</a>
         <a href="calendrier.html" class="btn btn-ghost">Voir le calendrier</a>
@@ -59,20 +59,20 @@
   <section class="stats-band">
     <div class="container stats-inner">
       <div class="stat">
-        <div class="stat-num">12</div>
-        <div class="stat-label">Équipes engagées</div>
+        <div class="stat-num">{{accueil.stat1_valeur}}</div>
+        <div class="stat-label">{{accueil.stat1_label}}</div>
       </div>
       <div class="stat">
-        <div class="stat-num">+200</div>
-        <div class="stat-label">Licenciés</div>
+        <div class="stat-num">{{accueil.stat2_valeur}}</div>
+        <div class="stat-label">{{accueil.stat2_label}}</div>
       </div>
       <div class="stat">
-        <div class="stat-num">3</div>
-        <div class="stat-label">Gymnases</div>
+        <div class="stat-num">{{accueil.stat3_valeur}}</div>
+        <div class="stat-label">{{accueil.stat3_label}}</div>
       </div>
       <div class="stat">
-        <div class="stat-num">40<span>ans</span></div>
-        <div class="stat-label">D'histoire</div>
+        <div class="stat-num">{{accueil.stat4_valeur}}<span>ans</span></div>
+        <div class="stat-label">{{accueil.stat4_label}}</div>
       </div>
     </div>
   </section>
@@ -301,11 +301,11 @@
           <img src="img/logo.png" alt="Logo" class="logo-img logo-img-footer">
           <strong>Moulins-lès-Metz Handball</strong>
         </div>
-        <p>Club de handball affilié à la FFHB. Engagé en championnat Honneur Régional et Départemental.</p>
+        <p>{{site.footer_description}}</p>
         <div class="footer-socials">
-          <a href="#">Facebook</a>
-          <a href="#">Instagram</a>
-          <a href="#">YouTube</a>
+          <a href="{{site.facebook}}">Facebook</a>
+          <a href="{{site.instagram}}">Instagram</a>
+          <a href="{{site.youtube}}">YouTube</a>
         </div>
       </div>
       <div>
@@ -324,9 +324,9 @@
       </div>
       <div>
         <strong>Contact</strong>
-        <span>Gymnase de Frescaty</span>
-        <span>57160 Moulins-lès-Metz</span>
-        <span>contact@moulinshandball.com</span>
+        <span>{{site.gymnase}}</span>
+        <span>{{site.ville}}</span>
+        <span>{{site.email}}</span>
       </div>
     </div>
     <div class="footer-bottom">

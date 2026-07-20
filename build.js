@@ -41,6 +41,36 @@ function loadCollection(name) {
     .filter(Boolean);
 }
 
+/* ---------- Réglages (jetons {{site.*}} / {{accueil.*}}) ---------- */
+
+function readSettings(file) {
+  const p = path.join(ROOT, "content", "settings", file);
+  if (!fs.existsSync(p)) return {};
+  const m = fs.readFileSync(p, "utf8").match(/^---\r?\n([\s\S]+?)\r?\n---/);
+  return m ? yaml.load(m[1]) || {} : {};
+}
+
+function flatten(prefix, obj, out) {
+  for (const [k, v] of Object.entries(obj || {})) {
+    out[`${prefix}.${k}`] = v == null ? "" : String(v);
+  }
+  return out;
+}
+
+function applyTokens(html, map) {
+  return html.replace(/\{\{([a-z0-9_.]+)\}\}/gi, (m, key) => (key in map ? map[key] : m));
+}
+
+function listHtml(dir, acc = []) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "admin") continue; // le backoffice n'utilise pas nos jetons
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) listHtml(full, acc);
+    else if (e.name.endsWith(".html")) acc.push(full);
+  }
+  return acc;
+}
+
 /* ---------- Helpers identiques à cms-render.js ---------- */
 
 function formatDate(iso, opts) {
@@ -499,6 +529,21 @@ function build() {
   // 5. L'ancien gabarit dynamique et le JS de rendu ne sont plus servis
   fs.rmSync(path.join(DIST, "actualite.html"), { force: true });
   fs.rmSync(path.join(DIST, "js", "cms-render.js"), { force: true });
+
+  // 6. Jetons de réglages remplacés sur TOUTES les pages (footer, bandeau, hero, stats)
+  const tokenMap = {};
+  flatten("site", readSettings("site.md"), tokenMap);
+  flatten("accueil", readSettings("accueil.md"), tokenMap);
+  let tokenPages = 0;
+  for (const file of listHtml(DIST)) {
+    const before = fs.readFileSync(file, "utf8");
+    const after = applyTokens(before, tokenMap);
+    if (after !== before) {
+      fs.writeFileSync(file, after);
+      tokenPages++;
+    }
+  }
+  console.log(`✓ Réglages appliqués sur ${tokenPages} page(s)`);
 
   console.log("Build terminé → dist/");
 }

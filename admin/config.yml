@@ -17,6 +17,42 @@ logo_url: /img/logo.png
 locale: fr
 
 collections:
+  - name: reglages
+    label: Réglages du site
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Réglages généraux
+        file: content/settings/site.md
+        fields:
+          - { name: saison, label: "Bandeau — Saison", widget: string, required: false }
+          - { name: championnat, label: "Bandeau — Championnat", widget: string, required: false }
+          - { name: cta_label, label: "Bouton en-tête — Texte", widget: string, default: "Nous rejoindre" }
+          - { name: cta_url, label: "Bouton en-tête — Lien", widget: string, hint: "Page interne (ex : contact.html) ou lien HelloAsso complet (https://...)" }
+          - { name: footer_description, label: "Pied de page — Description du club", widget: text }
+          - { name: email, label: "Email de contact", widget: string }
+          - { name: gymnase, label: "Gymnase", widget: string }
+          - { name: ville, label: "Ville / Code postal", widget: string }
+          - { name: facebook, label: "Lien Facebook", widget: string, required: false, hint: "Mettre # si pas de page" }
+          - { name: instagram, label: "Lien Instagram", widget: string, required: false, hint: "Mettre # si pas de page" }
+          - { name: youtube, label: "Lien YouTube", widget: string, required: false, hint: "Mettre # si pas de chaîne" }
+      - name: accueil
+        label: Page d'accueil
+        file: content/settings/accueil.md
+        fields:
+          - { name: hero_ligne1, label: "Titre — ligne 1", widget: string }
+          - { name: hero_ligne2, label: "Titre — ligne 2", widget: string }
+          - { name: hero_sous_titre, label: "Phrase d'accroche", widget: string }
+          - { name: stat1_valeur, label: "Chiffre 1 — valeur", widget: string }
+          - { name: stat1_label, label: "Chiffre 1 — libellé", widget: string }
+          - { name: stat2_valeur, label: "Chiffre 2 — valeur", widget: string }
+          - { name: stat2_label, label: "Chiffre 2 — libellé", widget: string }
+          - { name: stat3_valeur, label: "Chiffre 3 — valeur", widget: string }
+          - { name: stat3_label, label: "Chiffre 3 — libellé", widget: string }
+          - { name: stat4_valeur, label: "Chiffre 4 — valeur", widget: string }
+          - { name: stat4_label, label: "Chiffre 4 — libellé", widget: string }
+
   - name: actualites
     label: Actualités
     label_singular: Actualité

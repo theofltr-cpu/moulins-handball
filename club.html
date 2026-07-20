@@ -40,7 +40,7 @@
         <a href="actualites.html">Actualités</a>
         <a href="contact.html">Contact</a>
       </nav>
-      <a href="contact.html" class="header-cta">Nous rejoindre</a>
+      <a href="{{site.cta_url}}" class="header-cta">{{site.cta_label}}</a>
     </div>
   </header>
 
@@ -195,9 +195,9 @@
           <img src="img/logo.png" alt="Logo" class="logo-img logo-img-footer">
           <strong>Moulins-lès-Metz Handball</strong>
         </div>
-        <p>Club de handball affilié à la FFHB. Engagé en championnat Honneur Régional et Départemental.</p>
+        <p>{{site.footer_description}}</p>
         <div class="footer-socials">
-          <a href="#">Facebook</a><a href="#">Instagram</a><a href="#">YouTube</a>
+          <a href="{{site.facebook}}">Facebook</a><a href="{{site.instagram}}">Instagram</a><a href="{{site.youtube}}">YouTube</a>
         </div>
       </div>
       <div>
@@ -216,9 +216,9 @@
       </div>
       <div>
         <strong>Contact</strong>
-        <span>Gymnase de Frescaty</span>
-        <span>57160 Moulins-lès-Metz</span>
-        <span>contact@moulinshandball.com</span>
+        <span>{{site.gymnase}}</span>
+        <span>{{site.ville}}</span>
+        <span>{{site.email}}</span>
       </div>
     </div>
     <div class="footer-bottom">

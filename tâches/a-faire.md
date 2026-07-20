@@ -52,3 +52,10 @@
 - [x] Vérifié en local + en ligne (déploiement auto OK)
 - [x] Liste officielle des équipes intégrée dans admin/config.yml (8 catégories) + compétition Championnat/Coupe
 - [ ] Remplacer les 4 matchs d'exemple par les vrais matchs via /admin
+
+## Phase 5 — Fiches d'équipes (2026-07-20)
+
+- [x] Schéma backoffice équipes enrichi (nom en select officiel, horaires, gymnase)
+- [x] 8 fiches d'équipes créées, reliées chacune à son calendrier filtré
+- [x] Page Équipes dynamique (plus de contenu factice) + vérifiée en ligne
+- [ ] À FAIRE PAR THÉO via /admin : remplir coach / horaires / gymnase + ajouter les photos d'équipes

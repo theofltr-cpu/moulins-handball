@@ -214,11 +214,9 @@ function renderEquipes(items) {
     .map((item) => {
       const fm = item.frontmatter || {};
       const calSlug = slugifyTeam(fm.name || `${fm.category || ""} ${fm.gender || ""}`);
-      const infos = [
-        fm.coach ? `<span class="team-tile-info"><strong>Coach</strong> ${fm.coach}</span>` : "",
-        fm.schedule ? `<span class="team-tile-info"><strong>Entraînement</strong> ${fm.schedule}</span>` : "",
-        fm.venue ? `<span class="team-tile-info"><strong>Gymnase</strong> ${fm.venue}</span>` : "",
-      ].join("");
+      const infos = fm.coach
+        ? `<span class="team-tile-info"><strong>Coach</strong> ${fm.coach}</span>`
+        : "";
       return `
         <a href="/calendrier.html?equipe=${calSlug}" class="team-tile" style="text-decoration:none;color:inherit;display:block;">
           <div class="team-tile-img" style="${imgBg(fm.photo, "linear-gradient(135deg, #F26522 0%, #c44d12 100%)")}"></div>
@@ -234,13 +232,35 @@ function renderEquipes(items) {
     .join("");
 }
 
+function renderPartenaires(items) {
+  if (!items || items.length === 0) return null;
+  const sorted = items
+    .slice()
+    .sort((a, b) => (a.frontmatter?.order || 0) - (b.frontmatter?.order || 0));
+  return sorted
+    .map((item) => {
+      const fm = item.frontmatter || {};
+      const inner = fm.logo
+        ? `<img src="${encodeURI(fm.logo)}" alt="${(fm.name || "").replace(/"/g, "&quot;")}" loading="lazy">`
+        : `<span>${fm.name || ""}</span>`;
+      return fm.url
+        ? `<a class="sponsor-card" href="${fm.url}" target="_blank" rel="noopener" title="${(fm.name || "").replace(/"/g, "&quot;")}">${inner}</a>`
+        : `<div class="sponsor-card" title="${(fm.name || "").replace(/"/g, "&quot;")}">${inner}</div>`;
+    })
+    .join("");
+}
+
+const MATCHS_A_VENIR =
+  '<p style="grid-column:1/-1;text-align:center;color:#b8b8b8;padding:20px 0;">Le calendrier de la saison arrive bientôt. <a href="calendrier.html" style="color:#F26522;">Voir toutes les équipes →</a></p>';
+
 function renderMatchs(items) {
-  if (items.length === 0) return null;
   const sorted = items
     .slice()
     .sort((a, b) => new Date(a.frontmatter?.date || 0) - new Date(b.frontmatter?.date || 0));
-  const upcoming = sorted.filter((i) => i.frontmatter?.status !== "Joué").slice(0, 3);
-  if (upcoming.length === 0) return null;
+  const upcoming = sorted
+    .filter((i) => i.frontmatter?.status !== "Joué" && i.frontmatter?.date)
+    .slice(0, 3);
+  if (upcoming.length === 0) return MATCHS_A_VENIR;
   return upcoming
     .map((item) => {
       const fm = item.frontmatter || {};
@@ -335,9 +355,14 @@ function renderCalRow(item, { showScore }) {
   const fm = item.frontmatter || {};
   const { day, num, time } = calDateParts(fm.date);
   const home = fm.home_team || "Moulins-lès-Metz";
-  const away = fm.away_team || "?";
+  const away = fm.away_team || "À venir";
   const homeIsUs = home.toLowerCase().includes("moulins");
   const slug = slugifyTeam(fm.team_category);
+  const dateBlock = fm.date
+    ? `<span class="cal-day">${day}</span>
+            <span class="cal-num">${num}</span>
+            <span class="cal-time">${time}</span>`
+    : `<span class="cal-tbd">À venir</span>`;
 
   let middle;
   if (showScore && fm.home_score != null && fm.away_score != null) {
@@ -359,9 +384,7 @@ function renderCalRow(item, { showScore }) {
   return `
         <article class="cal-row" data-team="${slug}">
           <div class="cal-date">
-            <span class="cal-day">${day}</span>
-            <span class="cal-num">${num}</span>
-            <span class="cal-time">${time}</span>
+            ${dateBlock}
           </div>
           <div class="cal-comp">
             <span class="match-comp">${compLabel(fm)}</span>
@@ -459,14 +482,36 @@ function renderArticleInner(item) {
  */
 function injectCms(pageHtml, name, html) {
   if (html == null) return pageHtml;
-  const openTag = new RegExp(
-    `(<(article|div)[^>]*data-cms="${name}"[^>]*>)([\\s\\S]*?)(</\\2>)`,
-  );
-  if (!openTag.test(pageHtml)) {
+  const open = new RegExp(`<(article|div)[^>]*\\bdata-cms="${name}"[^>]*>`);
+  const m = open.exec(pageHtml);
+  if (!m) {
     console.warn(`Conteneur data-cms="${name}" introuvable`);
     return pageHtml;
   }
-  return pageHtml.replace(openTag, `$1${html}$4`);
+  const tag = m[1];
+  const openEnd = m.index + m[0].length;
+  // Trouver la balise fermante correspondante en comptant l'imbrication
+  // (le contenu de secours peut contenir des <div> imbriqués).
+  const scan = new RegExp(`<${tag}\\b[^>]*>|</${tag}>`, "g");
+  scan.lastIndex = openEnd;
+  let depth = 1;
+  let closeStart = -1;
+  let t;
+  while ((t = scan.exec(pageHtml))) {
+    if (t[0][1] === "/") {
+      if (--depth === 0) {
+        closeStart = t.index;
+        break;
+      }
+    } else {
+      depth++;
+    }
+  }
+  if (closeStart === -1) {
+    console.warn(`Conteneur data-cms="${name}" mal fermé`);
+    return pageHtml;
+  }
+  return pageHtml.slice(0, openEnd) + html + pageHtml.slice(closeStart);
 }
 
 /** Retire les balises <script> devenues inutiles (cms-render + libs CDN). */
@@ -514,6 +559,7 @@ function build() {
   const actualites = sortByDateDesc(loadCollection("actualites"));
   const equipes = loadCollection("equipes");
   const matchs = loadCollection("matchs");
+  const partenaires = loadCollection("partenaires");
   const clubPage = readPage("club.md");
   console.log(
     `Contenus : ${actualites.length} actu(s), ${equipes.length} équipe(s), ${matchs.length} match(s)`,
@@ -524,6 +570,7 @@ function build() {
     "index.html": (html) => {
       html = injectCms(html, "actualites-mosaic", renderHomeNewsMosaic(actualites));
       html = injectCms(html, "matchs", renderMatchs(matchs));
+      html = injectCms(html, "partenaires", renderPartenaires(partenaires));
       return html;
     },
     "actualites.html": (html) => {

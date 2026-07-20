@@ -122,8 +122,6 @@ collections:
       - { name: name, label: Nom de l'équipe, widget: select, options: ["-11 Garçons", "-11 Filles", "-13 Garçons", "-15 Filles", "-17 Garçons", "Séniors Filles", "Séniors 1 Garçons", "Séniors 2 Garçons"], hint: "Doit correspondre à la catégorie utilisée pour les matchs (pour relier la fiche au bon calendrier)" }
       - { name: championship, label: Championnat / Niveau, widget: string, required: false, hint: "Ex : Honneur Régional, Honneur Départemental" }
       - { name: coach, label: Coach principal, widget: string, required: false }
-      - { name: schedule, label: Horaires d'entraînement, widget: string, required: false, hint: "Ex : Mardi & Jeudi 18h-20h" }
-      - { name: venue, label: Gymnase / Lieu d'entraînement, widget: string, required: false, hint: "Ex : Gymnase de Frescaty" }
       - { name: photo, label: Photo équipe, widget: image, required: false }
       - { name: order, label: Ordre d'affichage, widget: number, default: 0, hint: "Plus le chiffre est petit, plus l'équipe apparaît en premier" }
       - { name: description, label: Description, widget: text, required: false }

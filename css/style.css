@@ -1288,6 +1288,14 @@ a { color: inherit; text-decoration: none; }
 .cal-score-loss { color: #f87171; }
 .cal-score-draw { color: var(--gray-2); }
 
+.cal-tbd {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--orange);
+}
+
 .cal-place {
   font-size: 13px;
   color: var(--gray);

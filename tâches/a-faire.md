@@ -86,3 +86,10 @@
 - [x] Menu burger plein écran sur toutes les pages (+ bouton Nous rejoindre)
 - [x] js/nav.js (ouverture/fermeture) ; desktop inchangé
 - [x] Vérifié mobile + desktop + en ligne
+
+## Phase 9 — Migration contenu ancien site Wix (2026-07-20)
+
+- [x] Actualités : 20 articles migrés (via blog-feed.xml) + images pleine résolution
+- [ ] Photothèque : 6 albums (~300 photos) — Théo a validé (tous les albums + qualité web)
+  - [ ] Construire la page Photothèque (albums -> grille photos + lightbox)
+  - [ ] Scraper + télécharger les photos des 6 sous-domaines Wix

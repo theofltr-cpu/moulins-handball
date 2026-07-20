@@ -79,3 +79,10 @@
 - [ ] THÉO : ajouter les logos partenaires via /admin (collection Partenaires)
 - [ ] THÉO : donnera les vrais matchs quand les calendriers sortent
 - [ ] THÉO : récupérer les anciennes actus de l'ancien site + composition du bureau (à me transmettre)
+
+## Phase 8 — Responsive mobile (2026-07-20)
+
+- [x] Audit mobile (375px) : aucun débordement, layout OK ; seul manque = navigation mobile
+- [x] Menu burger plein écran sur toutes les pages (+ bouton Nous rejoindre)
+- [x] js/nav.js (ouverture/fermeture) ; desktop inchangé
+- [x] Vérifié mobile + desktop + en ligne

@@ -93,3 +93,12 @@
 - [ ] Photothèque : 6 albums (~300 photos) — Théo a validé (tous les albums + qualité web)
   - [ ] Construire la page Photothèque (albums -> grille photos + lightbox)
   - [ ] Scraper + télécharger les photos des 6 sous-domaines Wix
+
+## Phase 10 — Backoffice sur-mesure (2026-07-21)
+
+- [x] API worker Cloudflare (login sessions KV, list/lecture/écriture/suppression via jeton GitHub limité)
+- [x] Interface sur-mesure /admin (design club) : login email/mdp, 4 rubriques, éditeur, publication
+- [x] Testé de bout en bout : connexion → édition d'une actu → commit GitHub → déploiement auto
+- [x] Compte Théo créé (theofltr@icloud.com)
+- [ ] Ajouter les comptes des bénévoles (Théo fournit les emails)
+- [ ] Reste à porter dans la nouvelle interface : Réglages du site / Pages Club & Contact / upload d'images

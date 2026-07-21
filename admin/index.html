@@ -147,7 +147,7 @@ async function api(path,opts={}){
 }
 async function doLogin(e){
   e.preventDefault();
-  const email=li_email.value,pass=li_pass.value,errEl=li_err;errEl.classList.add("hidden");
+  const email=document.getElementById("li-email").value,pass=document.getElementById("li-pass").value,errEl=document.getElementById("li-err");errEl.classList.add("hidden");
   try{
     const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pass})});
     const d=await r.json(); if(!r.ok) throw new Error(d.error||"Connexion refusée");

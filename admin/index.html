@@ -119,12 +119,12 @@ const COLLECTIONS=[
   {id:"actualites",label:"Actualités",folder:"actualites",titleField:"title",chip:"category",date:"date",fields:[
     {name:"title",label:"Titre",type:"text",req:true},{name:"date",label:"Date",type:"datetime"},
     {name:"category",label:"Catégorie",type:"select",options:CATS},{name:"featured",label:"À la une",type:"bool"},
-    {name:"image",label:"Image (chemin)",type:"text",hint:"/img/uploads/mon-image.jpg"},
+    {name:"image",label:"Image",type:"image"},
     {name:"excerpt",label:"Résumé court",type:"textarea"},{name:"author",label:"Auteur",type:"text"},
     {name:"body",label:"Contenu de l'article",type:"markdown"}]},
   {id:"equipes",label:"Équipes",folder:"equipes",titleField:"name",chip:"championship",fields:[
     {name:"name",label:"Équipe",type:"select",options:TEAMS,req:true},{name:"championship",label:"Championnat / Niveau",type:"text"},
-    {name:"coach",label:"Coach",type:"text"},{name:"photo",label:"Photo (chemin)",type:"text"},
+    {name:"coach",label:"Coach",type:"text"},{name:"photo",label:"Photo",type:"image"},
     {name:"order",label:"Ordre d'affichage",type:"number"},{name:"description",label:"Description",type:"textarea"}]},
   {id:"matchs",label:"Matchs / Calendrier",folder:"matchs",titleField:"team_category",chip:"competition",date:"date",fields:[
     {name:"team_category",label:"Catégorie",type:"select",options:TEAMS,req:true},{name:"competition",label:"Compétition",type:"select",options:["Championnat","Coupe"]},
@@ -136,7 +136,7 @@ const COLLECTIONS=[
     {name:"score_moulins",label:"Score Moulins",type:"number"},{name:"score_adversaire",label:"Score adversaire",type:"number"},
     {name:"status",label:"Statut",type:"select",options:["À venir","Joué","Reporté","Annulé"]}]},
   {id:"partenaires",label:"Partenaires",folder:"partenaires",titleField:"name",fields:[
-    {name:"name",label:"Nom",type:"text",req:true},{name:"logo",label:"Logo (chemin)",type:"text"},
+    {name:"name",label:"Nom",type:"text",req:true},{name:"logo",label:"Logo",type:"image"},
     {name:"url",label:"Site web",type:"text"},{name:"order",label:"Ordre",type:"number"},{name:"description",label:"Description",type:"textarea"}]},
 ];
 let CURRENT=null;
@@ -214,6 +214,14 @@ function renderEditor(path,data){
   const fld=(def)=>{
     const id="fld_"+def.name,val=data[def.name]!==undefined?data[def.name]:"";
     if(def.type==="bool")return `<div class="field"><label class="check"><input type="checkbox" id="${id}" ${(val===true||val==="true")?"checked":""}> ${esc(def.label)}</label></div>`;
+    if(def.type==="image")return `<div class="field"><label>${esc(def.label)}</label>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <img id="${id}_prev" src="${esc(val)}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#222;${val?'':'display:none'}">
+        <button type="button" class="btn ghost" onclick="pickImage('${id}')">📷 Choisir une photo</button>
+        <span id="${id}_state" class="hint"></span>
+      </div>
+      <input id="${id}" type="hidden" value="${esc(val)}">
+      <input id="${id}_file" type="file" accept="image/*" class="hidden" onchange="uploadImage('${id}')"></div>`;
     let input;
     if(def.type==="textarea"||def.type==="markdown")input=`<textarea id="${id}" ${def.type==="markdown"?'style="min-height:220px"':''}>${esc(val)}</textarea>`;
     else if(def.type==="select")input=`<select id="${id}"><option value="">—</option>${def.options.map(o=>`<option ${o===val?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
@@ -229,6 +237,36 @@ function renderEditor(path,data){
   document.getElementById("saveB").onclick=()=>saveEntry(path||"");
 }
 function newEntry(){renderEditor("",{});}
+
+/* ---- envoi de photos depuis le PC ---- */
+function pickImage(id){document.getElementById(id+"_file").click();}
+async function uploadImage(id){
+  const fileInp=document.getElementById(id+"_file");
+  const file=fileInp.files[0]; if(!file) return;
+  const state=document.getElementById(id+"_state");
+  state.textContent="Préparation de l'image…";
+  try{
+    // Redimensionner (max 1600px) et compresser, sauf petits PNG (logos transparents)
+    let blob=file, filename=file.name;
+    const keepPng=file.type==="image/png"&&file.size<800*1024;
+    if(!keepPng){
+      const img=await new Promise((ok,ko)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=ko;i.src=URL.createObjectURL(file);});
+      const scale=Math.min(1,1600/Math.max(img.width,img.height));
+      const c=document.createElement("canvas");
+      c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      blob=await new Promise(ok=>c.toBlob(ok,"image/jpeg",0.85));
+      filename=filename.replace(/\.[^.]+$/,"")+".jpg";
+    }
+    state.textContent="Envoi en cours…";
+    const b64=await new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(",")[1]);r.onerror=ko;r.readAsDataURL(blob);});
+    const d=await api("/api/upload",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({filename,dataBase64:b64})});
+    document.getElementById(id).value=d.path;
+    const prev=document.getElementById(id+"_prev");prev.src=URL.createObjectURL(blob);prev.style.display="";
+    state.textContent="Photo ajoutée ✓";
+  }catch(e){state.textContent="";toast("Erreur d'envoi : "+e.message);}
+  fileInp.value="";
+}
 async function editEntry(path){
   content.innerHTML='<div class="center">Chargement…</div>';
   try{const d=await api("/api/file?path="+encodeURIComponent(path));renderEditor(path,parseFront(d.content));}catch(e){toast(e.message);}

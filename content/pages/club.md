@@ -15,8 +15,7 @@ bureau:
   - { name: Nom à compléter, role: Secrétaire, note: "Gestion administrative, licences FFHB et communication interne." }
   - { name: Nom à compléter, role: Trésorier, note: "Gestion financière, subventions et partenariats sponsors." }
 chiffres:
-  - { valeur: "+200", label: Licenciés }
-  - { valeur: "12", label: Équipes engagées }
-  - { valeur: "3", label: Gymnases utilisés }
-  - { valeur: "15", label: Bénévoles actifs }
+  - { valeur: "170", label: Licenciés }
+  - { valeur: "8", label: Équipes engagées }
+  - { valeur: "2", label: Gymnases utilisés }
 ---

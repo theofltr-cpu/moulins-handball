@@ -1,72 +1,252 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Admin · Moulins-lès-Metz Handball</title>
-  <link rel="icon" href="../img/logo.png">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      color-scheme: dark;
-
-      /* Accent orange du club */
-      --primary-accent-color: #F26522;
-      --primary-accent-color-translucent: rgba(242, 101, 34, 0.15);
-      --primary-accent-color-light: #ff7a35;
-      --primary-accent-color-dark: #c44d12;
-      --accent-color: #F26522;
-      --highlight-color: #F26522;
-      --link-color: #F26522;
-
-      /* Surface sombre */
-      --background-primary-color: #0a0a0a;
-      --background-secondary-color: #161616;
-      --background-tertiary-color: #1f1f1f;
-      --foreground-color: #ffffff;
-      --secondary-foreground-color: #b8b8b8;
-
-      /* Typographie */
-      --font-family-primary: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-      --font-family-headline: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: #0a0a0a;
-      color: #fff;
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Fond visuel de l'écran de connexion : photo équipe + overlay sombre orange */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(135deg, rgba(10, 10, 10, 0.78) 0%, rgba(10, 10, 10, 0.95) 100%),
-        radial-gradient(circle at 20% 80%, rgba(242, 101, 34, 0.18) 0%, transparent 60%),
-        url('../img/hero-team.jpg');
-      background-size: cover;
-      background-position: center;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* Anim subtile à l'ouverture */
-    body { animation: fadein 0.4s ease-out; }
-    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Backoffice — Moulins-lès-Metz Handball</title>
+<link rel="icon" href="/img/logo.png">
+<style>
+  :root{
+    --bg:#0b0d10;--panel:#14171c;--panel2:#191d23;--line:#262b33;
+    --ink:#eef1f5;--muted:#8b93a0;--faint:#5b626d;
+    --orange:#F26522;--orange-soft:rgba(242,101,34,.14);--orange-line:rgba(242,101,34,.4);
+    --green:#3fb96b;--green-soft:rgba(63,185,107,.14);--green-line:rgba(63,185,107,.4);--red:#e05656;
+    --font:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:14px}
+  a{color:var(--orange)}
+  button{font-family:inherit;cursor:pointer}
+  .hidden{display:none!important}
+  #login{min-height:100vh;display:grid;place-items:center;background-image:radial-gradient(600px 300px at 50% -10%,rgba(242,101,34,.18),transparent 60%)}
+  .card{width:min(360px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:32px}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .shield{width:44px;height:44px;border-radius:12px;background:conic-gradient(from 210deg,#F26522,#c1440f);display:grid;place-items:center;font-weight:800;color:#fff;font-size:13px;flex:none}
+  .brand b{font-size:15px}.brand span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+  label{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--ink);font-size:14px;font-family:inherit}
+  textarea{min-height:160px;resize:vertical;line-height:1.5}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--orange);outline-offset:1px;border-color:transparent}
+  .btn{background:var(--orange);color:#fff;border:0;border-radius:9px;padding:11px 16px;font-weight:700;font-size:14px}
+  .btn.block{width:100%;margin-top:18px}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .err{margin-top:14px;background:rgba(224,86,86,.12);border:1px solid rgba(224,86,86,.4);color:#f2a3a3;padding:10px 12px;border-radius:9px;font-size:13px}
+  #app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+  .side{background:var(--panel2);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px}
+  .side .brand{padding:6px 8px 16px;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav button{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:9px;color:var(--muted);background:none;border:0;font-size:13.5px;font-weight:600;text-align:left;width:100%}
+  .nav button.active{background:var(--orange-soft);color:var(--ink)}
+  .nav button:not(.active):hover{background:#20242b;color:var(--ink)}
+  .side-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-soft);border:1px solid var(--orange-line);display:grid;place-items:center;color:var(--orange);font-weight:800;font-size:12px;flex:none}
+  .side-foot .who{font-size:12.5px;font-weight:600;overflow:hidden}
+  .side-foot .who .em{color:var(--ink);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .side-foot .who .lo{display:block;color:var(--faint);font-size:11px;font-weight:500;cursor:pointer}
+  .main{min-width:0;display:flex;flex-direction:column}
+  .topbar{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid var(--line)}
+  .topbar h2{font-size:17px;font-weight:800}
+  .topbar .btn{margin-left:auto;display:inline-flex;gap:7px;align-items:center;padding:9px 15px;font-size:13px}
+  .content{padding:20px 24px;overflow:auto}
+  .row{display:grid;grid-template-columns:1fr 160px 120px 90px;gap:12px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}
+  .row:hover{background:var(--panel2)}
+  .row .t{font-weight:600;display:flex;align-items:center;gap:10px;min-width:0}
+  .row .t .thumb{width:36px;height:36px;border-radius:7px;flex:none;background:#222 center/cover;border:1px solid var(--line)}
+  .row .t b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+  .chip{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--orange-soft);color:var(--orange);justify-self:start;white-space:nowrap}
+  .date{font-size:13px;color:var(--muted)}
+  .rowact{display:flex;gap:6px;justify-self:end}
+  .rowact button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);display:grid;place-items:center}
+  .rowact button:hover{color:var(--ink)}
+  .editor{max-width:760px}
+  .editor .field{margin-bottom:16px}
+  .editor .hint{font-size:12px;color:var(--faint);margin-top:5px}
+  .editbar{display:flex;gap:10px;align-items:center;margin-top:8px}
+  .check{display:flex;align-items:center;gap:8px}.check input{width:auto}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#101418;border:1px solid var(--line);padding:12px 18px;border-radius:10px;font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:50}
+  .toast.ok{border-color:var(--green-line);color:#a7e9c0}
+  .muted{color:var(--muted)}.center{text-align:center;padding:50px 0;color:var(--faint)}
+  @media(max-width:760px){
+    #app{grid-template-columns:1fr}
+    .side{flex-direction:row;flex-wrap:wrap;align-items:center;border-right:0;border-bottom:1px solid var(--line)}
+    .side .brand{border:0;padding:4px 6px;margin:0}.nav{flex-direction:row;flex-wrap:wrap;flex:1}
+    .side-foot{margin:0;border:0;padding:0}
+    .row{grid-template-columns:1fr auto}.row .chip,.row .date{display:none}
+  }
+</style>
 </head>
 <body>
-  <script type="module" src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+<div id="login">
+  <form class="card" onsubmit="doLogin(event)">
+    <div class="brand"><span class="shield">MLM</span><div><b>Moulins-lès-Metz</b><span>Moselle Handball</span></div></div>
+    <h1 style="font-size:18px">Espace du club</h1>
+    <p class="muted" style="font-size:13.5px;margin-top:4px">Connectez-vous pour gérer le site.</p>
+    <label>Adresse e-mail</label>
+    <input id="li-email" type="email" required autocomplete="username">
+    <label>Mot de passe</label>
+    <input id="li-pass" type="password" required autocomplete="current-password">
+    <div id="li-err" class="err hidden"></div>
+    <button class="btn block" type="submit">Se connecter</button>
+  </form>
+</div>
+
+<div id="app" class="hidden">
+  <aside class="side">
+    <div class="brand"><span class="shield">MLM</span><div><b>Le club</b><span>Backoffice</span></div></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <span class="avatar" id="ava">?</span>
+      <div class="who"><span class="em" id="whoEmail"></span><span class="lo" onclick="logout()">Déconnexion</span></div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <h2 id="viewTitle">Actualités</h2>
+      <button class="btn" id="newBtn" onclick="newEntry()">＋ Nouveau</button>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<script>
+const API="https://moulins-handball-login.theofltr.workers.dev";
+let TOKEN=localStorage.getItem("mlm_token")||"";
+const CATS=["Séniors Garçons","Séniors Filles","Jeunes","Recrutement","Vie du club","Coupe","Partenaires"];
+const TEAMS=["-11 Garçons","-11 Filles","-13 Garçons","-15 Filles","-17 Garçons","Séniors Filles","Séniors 1 Garçons","Séniors 2 Garçons"];
+const COLLECTIONS=[
+  {id:"actualites",label:"Actualités",folder:"actualites",titleField:"title",chip:"category",date:"date",fields:[
+    {name:"title",label:"Titre",type:"text",req:true},{name:"date",label:"Date",type:"datetime"},
+    {name:"category",label:"Catégorie",type:"select",options:CATS},{name:"featured",label:"À la une",type:"bool"},
+    {name:"image",label:"Image (chemin)",type:"text",hint:"/img/uploads/mon-image.jpg"},
+    {name:"excerpt",label:"Résumé court",type:"textarea"},{name:"author",label:"Auteur",type:"text"},
+    {name:"body",label:"Contenu de l'article",type:"markdown"}]},
+  {id:"equipes",label:"Équipes",folder:"equipes",titleField:"name",chip:"championship",fields:[
+    {name:"name",label:"Équipe",type:"select",options:TEAMS,req:true},{name:"championship",label:"Championnat / Niveau",type:"text"},
+    {name:"coach",label:"Coach",type:"text"},{name:"photo",label:"Photo (chemin)",type:"text"},
+    {name:"order",label:"Ordre d'affichage",type:"number"},{name:"description",label:"Description",type:"textarea"}]},
+  {id:"matchs",label:"Matchs / Calendrier",folder:"matchs",titleField:"team_category",chip:"competition",date:"date",fields:[
+    {name:"team_category",label:"Catégorie",type:"select",options:TEAMS,req:true},{name:"competition",label:"Compétition",type:"select",options:["Championnat","Coupe"]},
+    {name:"competition_detail",label:"Précision compétition",type:"text"},{name:"date",label:"Date et heure",type:"datetime"},
+    {name:"home_team",label:"Équipe à domicile",type:"text"},{name:"away_team",label:"Équipe à l'extérieur",type:"text"},
+    {name:"venue",label:"Lieu / Gymnase",type:"text"},{name:"home_score",label:"Score domicile",type:"number"},
+    {name:"away_score",label:"Score extérieur",type:"number"},{name:"status",label:"Statut",type:"select",options:["À venir","Joué","Reporté","Annulé"]}]},
+  {id:"partenaires",label:"Partenaires",folder:"partenaires",titleField:"name",fields:[
+    {name:"name",label:"Nom",type:"text",req:true},{name:"logo",label:"Logo (chemin)",type:"text"},
+    {name:"url",label:"Site web",type:"text"},{name:"order",label:"Ordre",type:"number"},{name:"description",label:"Description",type:"textarea"}]},
+];
+let CURRENT=null;
+
+async function api(path,opts={}){
+  const r=await fetch(API+path,{...opts,headers:{...(opts.headers||{}),...(TOKEN?{"Authorization":"Bearer "+TOKEN}:{})}});
+  if(r.status===401){logout();throw new Error("Session expirée.");}
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.error||"Erreur serveur");
+  return d;
+}
+async function doLogin(e){
+  e.preventDefault();
+  const email=li_email.value,pass=li_pass.value,errEl=li_err;errEl.classList.add("hidden");
+  try{
+    const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pass})});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||"Connexion refusée");
+    TOKEN=d.token; localStorage.setItem("mlm_token",TOKEN); startApp(d.email);
+  }catch(err){errEl.textContent=err.message;errEl.classList.remove("hidden");}
+}
+function logout(){TOKEN="";localStorage.removeItem("mlm_token");app.classList.add("hidden");login.classList.remove("hidden");}
+function toast(msg,ok){const t=document.createElement("div");t.className="toast"+(ok?" ok":"");t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3400);}
+function esc(s){return(s==null?"":""+s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtDate(iso){try{return new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});}catch(e){return iso;}}
+function slugify(s){return(s||"element").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"element";}
+
+function startApp(email){
+  login.classList.add("hidden");app.classList.remove("hidden");
+  whoEmail.textContent=email;ava.textContent=(email[0]||"?").toUpperCase();
+  nav.innerHTML="";COLLECTIONS.forEach(c=>{const b=document.createElement("button");b.textContent=c.label;b.dataset.col=c.id;b.onclick=()=>openCollection(c.id);nav.appendChild(b);});
+  openCollection("actualites");
+}
+function setActive(id){[...nav.querySelectorAll("button")].forEach(b=>b.classList.toggle("active",b.dataset.col===id));}
+
+async function openCollection(id){
+  CURRENT=COLLECTIONS.find(c=>c.id===id);setActive(id);
+  viewTitle.textContent=CURRENT.label;newBtn.classList.remove("hidden");
+  content.innerHTML='<div class="center">Chargement…</div>';
+  try{
+    const d=await api("/api/list/"+CURRENT.folder);
+    let items=d.items;
+    if(CURRENT.date) items.sort((a,b)=>(""+(b.fields[CURRENT.date]||"")).localeCompare(""+(a.fields[CURRENT.date]||"")));
+    else items.sort((a,b)=>(+a.fields.order||0)-(+b.fields.order||0));
+    if(!items.length){content.innerHTML='<div class="center">Aucun élément. Cliquez sur « Nouveau ».</div>';return;}
+    content.innerHTML=items.map(it=>{
+      const f=it.fields,title=f[CURRENT.titleField]||it.slug;
+      const chip=CURRENT.chip&&f[CURRENT.chip]?`<span class="chip">${esc(f[CURRENT.chip])}</span>`:'<span></span>';
+      const date=CURRENT.date&&f[CURRENT.date]?`<span class="date">${fmtDate(f[CURRENT.date])}</span>`:'<span></span>';
+      const img=f.image||f.photo||f.logo;
+      const thumb=img?`<span class="thumb" style="background-image:url('${esc(img)}')"></span>`:`<span class="thumb"></span>`;
+      return `<div class="row"><div class="t">${thumb}<b>${esc(title)}</b></div>${chip}${date}<div class="rowact"><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
+    }).join("");
+  }catch(e){content.innerHTML=`<div class="center">Erreur : ${esc(e.message)}</div>`;}
+}
+
+function parseFront(text){
+  const m=(text||"").match(/^---\r?\n([\s\S]+?)\r?\n---\r?\n?([\s\S]*)$/);const data={};let body="";
+  if(m){body=m[2]||"";for(const line of m[1].split(/\r?\n/)){const mm=line.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);if(mm){let v=mm[2].trim();if((v[0]==='"'&&v.endsWith('"'))||(v[0]==="'"&&v.endsWith("'")))v=v.slice(1,-1);data[mm[1]]=v;}}}
+  data.body=body;return data;
+}
+function buildMd(fields){
+  let fm="---\n";
+  for(const def of CURRENT.fields){
+    if(def.name==="body")continue;
+    let v=fields[def.name];
+    if(def.type==="bool"){fm+=`${def.name}: ${v?"true":"false"}\n`;continue;}
+    if(v===undefined||v==="")continue;
+    if(def.type!=="number"&&/[:#"'\n]/.test(v))v='"'+(""+v).replace(/"/g,"'")+'"';
+    fm+=`${def.name}: ${v}\n`;
+  }
+  return fm+"---\n\n"+(fields.body||"");
+}
+function renderEditor(path,data){
+  newBtn.classList.add("hidden");viewTitle.textContent=(path?"Modifier":"Nouveau")+" — "+CURRENT.label;
+  const fld=(def)=>{
+    const id="fld_"+def.name,val=data[def.name]!==undefined?data[def.name]:"";
+    if(def.type==="bool")return `<div class="field"><label class="check"><input type="checkbox" id="${id}" ${(val===true||val==="true")?"checked":""}> ${esc(def.label)}</label></div>`;
+    let input;
+    if(def.type==="textarea"||def.type==="markdown")input=`<textarea id="${id}" ${def.type==="markdown"?'style="min-height:220px"':''}>${esc(val)}</textarea>`;
+    else if(def.type==="select")input=`<select id="${id}"><option value="">—</option>${def.options.map(o=>`<option ${o===val?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
+    else if(def.type==="number")input=`<input id="${id}" type="number" value="${esc(val)}">`;
+    else if(def.type==="datetime")input=`<input id="${id}" type="datetime-local" value="${esc((""+val).slice(0,16))}">`;
+    else input=`<input id="${id}" type="text" value="${esc(val)}">`;
+    return `<div class="field"><label>${esc(def.label)}${def.req?' *':''}</label>${input}${def.hint?`<div class="hint">${esc(def.hint)}</div>`:''}</div>`;
+  };
+  content.innerHTML=`<div class="editor">${CURRENT.fields.map(fld).join("")}
+    <div class="editbar"><button class="btn" id="saveB">${path?"Enregistrer":"Créer"} &amp; publier</button>
+    <button class="btn ghost" onclick="openCollection('${CURRENT.id}')">Annuler</button></div>
+    <p class="hint" style="margin-top:10px">La publication met le site à jour automatiquement (~2 min).</p></div>`;
+  document.getElementById("saveB").onclick=()=>saveEntry(path||"");
+}
+function newEntry(){renderEditor("",{});}
+async function editEntry(path){
+  content.innerHTML='<div class="center">Chargement…</div>';
+  try{const d=await api("/api/file?path="+encodeURIComponent(path));renderEditor(path,parseFront(d.content));}catch(e){toast(e.message);}
+}
+async function saveEntry(path){
+  const fields={};
+  for(const def of CURRENT.fields){const inp=document.getElementById("fld_"+def.name);if(!inp)continue;if(def.type==="bool")fields[def.name]=inp.checked;else fields[def.name]=inp.value;}
+  fields.body=fields.body||"";
+  for(const def of CURRENT.fields){if(def.req&&!fields[def.name]){toast("Champ requis : "+def.label);return;}}
+  let p=path;
+  if(!p){const base=slugify(fields[CURRENT.titleField]||"element");const dp=CURRENT.date&&fields[CURRENT.date]?fields[CURRENT.date].slice(0,10)+"-":"";p=`content/${CURRENT.folder}/${dp}${base}.md`;}
+  try{toast("Publication en cours…");await api("/api/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({path:p,content:buildMd(fields)})});toast("Publié ✓ Le site se met à jour (~2 min).",true);openCollection(CURRENT.id);}catch(e){toast("Erreur : "+e.message);}
+}
+async function delEntry(path,title){
+  if(!confirm("Supprimer « "+title+" » ? Action définitive."))return;
+  try{await api("/api/file?path="+encodeURIComponent(path),{method:"DELETE"});toast("Supprimé ✓",true);openCollection(CURRENT.id);}catch(e){toast("Erreur : "+e.message);}
+}
+(async function(){
+  if(TOKEN){try{const me=await api("/api/me");startApp(me.email);return;}catch(e){}}
+  login.classList.remove("hidden");
+})();
+</script>
 </body>
 </html>

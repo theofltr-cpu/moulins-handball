@@ -268,9 +268,7 @@ function renderMatchs(items) {
       const time = fm.date
         ? new Date(fm.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
         : "";
-      const home = fm.home_team || "Moulins-lès-Metz";
-      const away = fm.away_team || "?";
-      const homeIsUs = home.toLowerCase().includes("moulins");
+      const { home, away, homeIsUs } = matchInfo(fm);
       const awayBadge = (away.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       const homeBadge = (home.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       return `
@@ -339,40 +337,72 @@ function distinctTeams(matchs) {
 }
 
 function calDateParts(iso) {
-  if (!iso) return { day: "", num: "", time: "" };
+  if (!iso) return { day: "", num: "", month: "", time: "" };
   const d = new Date(iso);
   const day = d
     .toLocaleDateString("fr-FR", { weekday: "short" })
     .replace(".", "")
     .toUpperCase();
   const num = d.toLocaleDateString("fr-FR", { day: "numeric" });
+  const month = d
+    .toLocaleDateString("fr-FR", { month: "short" })
+    .replace(".", "")
+    .toUpperCase();
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
-  return { day, num, time: `${hh}H${mm}` };
+  return { day, num, month, time: `${hh}H${mm}` };
+}
+
+/**
+ * Équipes et scores d'un match, dans l'ordre domicile/extérieur.
+ * Nouveau format (backoffice) : lieu_match (Domicile/Extérieur) + adversaire
+ * + score_moulins / score_adversaire. Ancien format (home_team/away_team) accepté.
+ */
+function matchInfo(fm) {
+  const nous = "Moulins-lès-Metz";
+  if (fm.adversaire !== undefined || fm.lieu_match) {
+    const ext = String(fm.lieu_match || "").toLowerCase().startsWith("ext");
+    const adv = fm.adversaire || "À venir";
+    return {
+      home: ext ? adv : nous,
+      away: ext ? nous : adv,
+      homeIsUs: !ext,
+      homeScore: ext ? fm.score_adversaire : fm.score_moulins,
+      awayScore: ext ? fm.score_moulins : fm.score_adversaire,
+    };
+  }
+  const home = fm.home_team || nous;
+  const away = fm.away_team || "À venir";
+  return {
+    home,
+    away,
+    homeIsUs: home.toLowerCase().includes("moulins"),
+    homeScore: fm.home_score,
+    awayScore: fm.away_score,
+  };
 }
 
 function renderCalRow(item, { showScore }) {
   const fm = item.frontmatter || {};
-  const { day, num, time } = calDateParts(fm.date);
-  const home = fm.home_team || "Moulins-lès-Metz";
-  const away = fm.away_team || "À venir";
-  const homeIsUs = home.toLowerCase().includes("moulins");
+  const { day, num, month, time } = calDateParts(fm.date);
+  const { home, away, homeIsUs, homeScore, awayScore } = matchInfo(fm);
   const slug = slugifyTeam(fm.team_category);
   const dateBlock = fm.date
     ? `<span class="cal-day">${day}</span>
             <span class="cal-num">${num}</span>
+            <span class="cal-month">${month}</span>
             <span class="cal-time">${time}</span>`
     : `<span class="cal-tbd">À venir</span>`;
 
   let middle;
-  if (showScore && fm.home_score != null && fm.away_score != null) {
-    const usScore = homeIsUs ? fm.home_score : fm.away_score;
-    const themScore = homeIsUs ? fm.away_score : fm.home_score;
+  if (showScore && homeScore != null && awayScore != null) {
+    const usScore = homeIsUs ? homeScore : awayScore;
+    const themScore = homeIsUs ? awayScore : homeScore;
     const outcome =
       usScore > themScore ? "win" : usScore < themScore ? "loss" : "draw";
     middle = `
             <span class="cal-team${homeIsUs ? " home" : ""}">${home}</span>
-            <span class="cal-score cal-score-${outcome}">${fm.home_score}<span class="cal-score-sep">–</span>${fm.away_score}</span>
+            <span class="cal-score cal-score-${outcome}">${homeScore}<span class="cal-score-sep">–</span>${awayScore}</span>
             <span class="cal-team${!homeIsUs ? " home" : ""}">${away}</span>`;
   } else {
     middle = `

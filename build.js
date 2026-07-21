@@ -635,7 +635,6 @@ function build() {
     html = injectCms(html, "actualites-mosaic", renderHomeNewsMosaic(actualites));
     html = injectCms(html, "matchs", renderMatchs(matchs));
     html = injectCms(html, "partenaires", renderPartenaires(partenaires));
-    html = injectCms(html, "equipes", renderEquipes(equipes));
     return html;
   };
 

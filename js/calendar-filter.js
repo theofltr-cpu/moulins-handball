@@ -10,6 +10,12 @@
       row.hidden = !match;
     });
 
+    // Masquer une journée qui n'a plus aucun match visible
+    document.querySelectorAll("[data-cal-group]").forEach((group) => {
+      const hasVisible = group.querySelector(".cal-row:not([hidden])");
+      group.hidden = !hasVisible;
+    });
+
     // Masquer une section qui n'a plus aucun match visible
     document.querySelectorAll("[data-cal-section]").forEach((section) => {
       const hasVisible = section.querySelector(".cal-row:not([hidden])");

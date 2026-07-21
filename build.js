@@ -402,35 +402,51 @@ function renderCalendar(matchs) {
   const teams = distinctTeams(matchs);
   const isPlayed = (i) => i.frontmatter?.status === "Joué";
 
-  const upcoming = matchs
-    .filter((i) => !isPlayed(i))
-    .sort((a, b) => new Date(a.frontmatter?.date || 0) - new Date(b.frontmatter?.date || 0));
-  const results = matchs
-    .filter(isPlayed)
-    .sort((a, b) => new Date(b.frontmatter?.date || 0) - new Date(a.frontmatter?.date || 0));
-
   const filters =
     `<button class="filter-btn active" data-team="all">Toutes les équipes</button>` +
     teams
       .map((t) => `<button class="filter-btn" data-team="${t.slug}">${t.label}</button>`)
       .join("");
 
-  const section = (eyebrow, title, rows, { showScore = false, extraClass = "" } = {}) => {
-    if (rows.length === 0) return "";
-    return `
-      <section class="section${extraClass}" data-cal-section>
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <span class="eyebrow">${eyebrow}</span>
-              <h2>${title}</h2>
-            </div>
+  // Regroupement par journée : J1, J2, ... puis Coupe, puis matchs à programmer
+  const groups = new Map();
+  for (const m of matchs) {
+    const fm = m.frontmatter || {};
+    const j = parseInt(fm.journee, 10);
+    let key, label, rank;
+    if (!isNaN(j) && j > 0) {
+      key = "j" + j;
+      label = "Journée " + j;
+      rank = j;
+    } else if ((fm.competition || "") === "Coupe") {
+      key = "coupe";
+      label = "Coupe";
+      rank = 1000;
+    } else {
+      key = "aprog";
+      label = "À programmer";
+      rank = 2000;
+    }
+    if (!groups.has(key)) groups.set(key, { label, rank, items: [] });
+    groups.get(key).items.push(m);
+  }
+
+  const sorted = [...groups.values()].sort((a, b) => a.rank - b.rank);
+  const groupsHtml = sorted
+    .map((g) => {
+      const rows = g.items
+        .slice()
+        .sort((a, b) => new Date(a.frontmatter?.date || 0) - new Date(b.frontmatter?.date || 0))
+        .map((r) => renderCalRow(r, { showScore: isPlayed(r) }))
+        .join("");
+      return `
+        <div class="cal-group" data-cal-group>
+          <h3 class="cal-group-title">${g.label}</h3>
+          <div class="cal-list">${rows}
           </div>
-          <div class="cal-list">${rows.map((r) => renderCalRow(r, { showScore })).join("")}
-          </div>
-        </div>
-      </section>`;
-  };
+        </div>`;
+    })
+    .join("");
 
   return `
     <section class="section-filters">
@@ -439,8 +455,17 @@ function renderCalendar(matchs) {
         </div>
       </div>
     </section>
-    ${section("Matchs à venir", "Prochains matchs", upcoming)}
-    ${section("Résultats", "Derniers résultats", results, { showScore: true, extraClass: " section-alt" })}
+    <section class="section" data-cal-section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Saison 2025-2026</span>
+            <h2>Le calendrier journée par journée</h2>
+          </div>
+        </div>
+        ${groupsHtml}
+      </div>
+    </section>
   `;
 }
 

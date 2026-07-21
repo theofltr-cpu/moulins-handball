@@ -128,6 +128,7 @@ const COLLECTIONS=[
     {name:"order",label:"Ordre d'affichage",type:"number"},{name:"description",label:"Description",type:"textarea"}]},
   {id:"matchs",label:"Matchs / Calendrier",folder:"matchs",titleField:"team_category",chip:"competition",date:"date",fields:[
     {name:"team_category",label:"Catégorie",type:"select",options:TEAMS,req:true},{name:"competition",label:"Compétition",type:"select",options:["Championnat","Coupe"]},
+    {name:"journee",label:"Journée (1, 2, 3…)",type:"number",hint:"Numéro de journée du championnat — laisser vide pour la Coupe"},
     {name:"competition_detail",label:"Précision compétition",type:"text"},{name:"date",label:"Date et heure",type:"datetime"},
     {name:"home_team",label:"Équipe à domicile",type:"text"},{name:"away_team",label:"Équipe à l'extérieur",type:"text"},
     {name:"venue",label:"Lieu / Gymnase",type:"text"},{name:"home_score",label:"Score domicile",type:"number"},

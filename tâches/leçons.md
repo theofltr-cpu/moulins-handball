@@ -92,3 +92,15 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 - En cas de doute : commit vide `git commit --allow-empty` pour re-déclencher un déploiement propre du HEAD courant.
 
 **Why :** croire à tort qu'un déploiement a eu lieu fait perdre du temps et donne une fausse validation « en ligne ».
+
+---
+
+## Vérification / Cache (2026-07-21)
+
+### Ne jamais dire "ça marche" sans l'avoir vu dans le navigateur RÉEL de l'utilisateur
+**Contexte :** j'ai affirmé plusieurs fois "la pagination marche / les chiffres sont à jour" en me basant sur `curl` ou le dist local. Théo, lui, voyait l'ancienne version (cache navigateur + propagation Cloudflare sur son edge). Résultat : "tout ce que tu m'as dit il n'y a rien" → perte de confiance.
+**Règle :**
+- Avant de dire "c'est fait/ça marche" : vérifier dans le navigateur connecté de l'utilisateur (claude-in-chrome) avec un rechargement forcé (URL ?v=timestamp), pas seulement en curl.
+- Après un déploiement Cloudflare : attendre ~1-2 min ET re-tester depuis le navigateur de l'utilisateur (la propagation edge peut traîner localement même quand curl voit déjà la nouvelle version).
+- Quand un bug est re-signalé 2+ fois alors que "ça marche" côté serveur : c'est du cache/propagation → régler la CAUSE (en-tête no-cache) au lieu de répéter "vide ton cache".
+**Fait :** ajout d'un fichier `_headers` avec `Cache-Control: no-cache` pour que le navigateur revalide toujours.

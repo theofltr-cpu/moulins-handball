@@ -2,7 +2,7 @@ backend:
   name: github
   repo: theofltr-cpu/moulins-handball
   branch: main
-  base_url: https://moulins-handball-oauth.theofltr.workers.dev
+  base_url: https://moulins-handball-login.theofltr.workers.dev
   auth_endpoint: auth
 
 publish_mode: editorial_workflow

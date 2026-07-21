@@ -117,6 +117,12 @@ function formatDate(iso, opts) {
   );
 }
 
+function esc(s) {
+  return (s == null ? "" : "" + s).replace(/[&<>"]/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]),
+  );
+}
+
 function imgBg(image, fallback) {
   if (image) {
     const enc = encodeURI(image);
@@ -213,18 +219,18 @@ function renderEquipes(items) {
   return sorted
     .map((item) => {
       const fm = item.frontmatter || {};
-      const calSlug = slugifyTeam(fm.name || `${fm.category || ""} ${fm.gender || ""}`);
+      const teamSlug = slugifyTeam(fm.name || `${fm.category || ""} ${fm.gender || ""}`);
       const infos = fm.coach
         ? `<span class="team-tile-info"><strong>Coach</strong> ${fm.coach}</span>`
         : "";
       return `
-        <a href="/calendrier.html?equipe=${calSlug}" class="team-tile" style="text-decoration:none;color:inherit;display:block;">
+        <a href="/equipe/${teamSlug}.html" class="team-tile" style="text-decoration:none;color:inherit;display:block;">
           <div class="team-tile-img" style="${imgBg(fm.photo, "linear-gradient(135deg, #F26522 0%, #c44d12 100%)")}"></div>
           <div class="team-tile-content">
             <span class="team-tile-cat">${fm.championship || ""}</span>
             <h3>${fm.name || ""}</h3>
             <div class="team-tile-infos">${infos}</div>
-            <span class="team-tile-link">Voir le calendrier →</span>
+            <span class="team-tile-link">Voir l'équipe →</span>
           </div>
         </a>
       `;
@@ -426,19 +432,9 @@ function renderCalRow(item, { showScore }) {
         </article>`;
 }
 
-function renderCalendar(matchs) {
-  if (matchs.length === 0) return null;
-
-  const teams = distinctTeams(matchs);
+// Regroupe des matchs par journée (J1, J2… puis Coupe, puis À programmer)
+function renderJourneeGroups(matchs) {
   const isPlayed = (i) => i.frontmatter?.status === "Joué";
-
-  const filters =
-    `<button class="filter-btn active" data-team="all">Toutes les équipes</button>` +
-    teams
-      .map((t) => `<button class="filter-btn" data-team="${t.slug}">${t.label}</button>`)
-      .join("");
-
-  // Regroupement par journée : J1, J2, ... puis Coupe, puis matchs à programmer
   const groups = new Map();
   for (const m of matchs) {
     const fm = m.frontmatter || {};
@@ -460,9 +456,8 @@ function renderCalendar(matchs) {
     if (!groups.has(key)) groups.set(key, { label, rank, items: [] });
     groups.get(key).items.push(m);
   }
-
-  const sorted = [...groups.values()].sort((a, b) => a.rank - b.rank);
-  const groupsHtml = sorted
+  return [...groups.values()]
+    .sort((a, b) => a.rank - b.rank)
     .map((g) => {
       const rows = g.items
         .slice()
@@ -477,23 +472,21 @@ function renderCalendar(matchs) {
         </div>`;
     })
     .join("");
+}
 
+// Calendrier d'UNE équipe (page équipe) : uniquement ses matchs, par journée
+function renderTeamCalendar(matchs, teamSlug) {
+  const mine = matchs.filter((m) => slugifyTeam(m.frontmatter?.team_category) === teamSlug);
+  if (mine.length === 0) return null;
+  return renderJourneeGroups(mine);
+}
+
+function renderCalendar(matchs) {
+  if (matchs.length === 0) return null;
   return `
-    <section class="section-filters">
-      <div class="container">
-        <div class="filters" data-cal-filters>${filters}
-        </div>
-      </div>
-    </section>
     <section class="section" data-cal-section>
       <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Saison 2025-2026</span>
-            <h2>Le calendrier journée par journée</h2>
-          </div>
-        </div>
-        ${groupsHtml}
+        ${renderJourneeGroups(matchs)}
       </div>
     </section>
   `;
@@ -622,12 +615,6 @@ function build() {
 
   // 3. Injection dans les pages
   const pages = {
-    "index.html": (html) => {
-      html = injectCms(html, "actualites-mosaic", renderHomeNewsMosaic(actualites));
-      html = injectCms(html, "matchs", renderMatchs(matchs));
-      html = injectCms(html, "partenaires", renderPartenaires(partenaires));
-      return html;
-    },
     "actualites.html": (html) => {
       const featured = actualites.find((i) => i.frontmatter?.featured) || actualites[0];
       html = injectCms(html, "actualites-featured", renderActualitesFeatured(actualites));
@@ -635,12 +622,21 @@ function build() {
       return html;
     },
     "equipes.html": (html) => injectCms(html, "equipes", renderEquipes(equipes)),
-    "calendrier.html": (html) => injectCms(html, "calendrier", renderCalendar(matchs)),
     "club.html": (html) => {
       html = injectCms(html, "bureau", renderBureau(clubPage.bureau));
       html = injectCms(html, "chiffres", renderChiffres(clubPage.chiffres));
+      html = injectCms(html, "partenaires", renderPartenaires(partenaires));
       return html;
     },
+    "photos.html": (html) => html,
+  };
+  // Section "Nos équipes" de l'accueil : dynamique comme la page Équipes
+  pages["index.html"] = (html) => {
+    html = injectCms(html, "actualites-mosaic", renderHomeNewsMosaic(actualites));
+    html = injectCms(html, "matchs", renderMatchs(matchs));
+    html = injectCms(html, "partenaires", renderPartenaires(partenaires));
+    html = injectCms(html, "equipes", renderEquipes(equipes));
+    return html;
   };
 
   for (const [file, transform] of Object.entries(pages)) {
@@ -671,8 +667,31 @@ function build() {
     console.log(`✓ actualite/${item.slug}.html`);
   }
 
-  // 5. L'ancien gabarit dynamique et le JS de rendu ne sont plus servis
+  // 4b. Une page par équipe (grande photo + son calendrier), depuis equipe.html
+  const equipeTpl = fs.readFileSync(path.join(ROOT, "equipe.html"), "utf8");
+  fs.mkdirSync(path.join(DIST, "equipe"), { recursive: true });
+  for (const item of equipes) {
+    const fm = item.frontmatter || {};
+    const teamSlug = slugifyTeam(fm.name || "");
+    const photoStyle = fm.photo
+      ? `background-image:linear-gradient(180deg,rgba(10,10,10,.35),rgba(10,10,10,.85)),url('${encodeURI(fm.photo)}');background-size:cover;background-position:center;`
+      : "background:linear-gradient(135deg,#1a1a1a,#2a1a0a);";
+    let page = equipeTpl
+      .replace(/(href|src)="(css|img|js)\//g, '$1="/$2/')
+      .replace(/(href)="([a-z-]+\.html)(#[a-z-]+)?"/g, '$1="/$2$3"')
+      .replaceAll("%%NOM%%", esc(fm.name || "Équipe"))
+      .replaceAll("%%CHAMP%%", esc(fm.championship || ""))
+      .replaceAll("%%COACH%%", fm.coach ? "Coach : " + esc(fm.coach) : "")
+      .replace("%%PHOTO_STYLE%%", photoStyle);
+    page = injectCms(page, "equipe-calendrier", renderTeamCalendar(matchs, teamSlug));
+    fs.writeFileSync(path.join(DIST, "equipe", `${teamSlug}.html`), page);
+    console.log(`✓ equipe/${teamSlug}.html`);
+  }
+
+  // 5. Fichiers/pages qui ne sont plus servis (gabarits + ancienne page Calendrier)
   fs.rmSync(path.join(DIST, "actualite.html"), { force: true });
+  fs.rmSync(path.join(DIST, "equipe.html"), { force: true });
+  fs.rmSync(path.join(DIST, "calendrier.html"), { force: true });
   fs.rmSync(path.join(DIST, "js", "cms-render.js"), { force: true });
 
   // 6. Jetons de réglages remplacés sur TOUTES les pages (footer, bandeau, hero, stats)

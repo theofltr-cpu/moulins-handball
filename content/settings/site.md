@@ -7,7 +7,7 @@ footer_description: Club de handball affilié à la FFHB. Engagé en championnat
 email: moulinshandball57@gmail.com
 gymnase: Gymnase Louis Armand
 ville: 57160 Moulins-lès-Metz
-facebook: "#"
-instagram: "#"
+facebook: "https://www.facebook.com/p/3MHB-Moulins-l%C3%A8s-Metz-Handball-100063156780177/"
+instagram: "https://www.instagram.com/moulinshandball/"
 youtube: "#"
 ---

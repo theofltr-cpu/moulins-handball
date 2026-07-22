@@ -767,23 +767,16 @@ a { color: inherit; text-decoration: none; }
   filter: blur(40px);
 }
 
-.join-visual-num {
-  font-size: clamp(90px, 20vw, 180px);
-  font-weight: 900;
-  color: var(--orange);
-  line-height: 1;
-  letter-spacing: -8px;
+.join-visual-photo {
   position: relative;
-}
-
-.join-visual-label {
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  color: var(--white);
-  font-weight: 600;
-  position: relative;
-  margin-top: 8px;
+  width: 100%;
+  max-width: 460px;
+  height: 100%;
+  min-height: 300px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
 }
 
 /* ========== SPONSORS ========== */
@@ -1795,9 +1788,9 @@ a { color: inherit; text-decoration: none; }
 .nav-toggle span {
   display: block;
   width: 100%;
-  height: 2px;
+  height: 3px;
   background: #fff;
-  border-radius: 2px;
+  border-radius: 3px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -1844,14 +1837,17 @@ a { color: inherit; text-decoration: none; }
     left: 0;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 28px;
-    background: rgba(10, 10, 10, 0.98);
-    transform: translateX(100%);
-    transition: transform 0.35s ease;
-    z-index: 200;
+    background: var(--black);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 250;
   }
   .main-nav a { font-size: 22px; color: #fff; }
   .nav-cta-mobile {
@@ -1866,13 +1862,16 @@ a { color: inherit; text-decoration: none; }
     letter-spacing: 0.5px;
   }
   body.nav-open { overflow: hidden; }
-  body.nav-open .main-nav { transform: translateX(0); }
+  body.nav-open .main-nav { opacity: 1; visibility: visible; pointer-events: auto; }
   /* CTA masqué dans la barre mobile (accessible via le menu) */
   .header-cta { display: none; }
-  /* burger -> croix */
-  body.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  /* burger -> croix (X) bien visible quand le menu est ouvert */
+  .nav-toggle { z-index: 320; position: relative; transition: background 0.25s ease; }
+  body.nav-open .nav-toggle { background: rgba(255, 255, 255, 0.1); border-radius: 50%; }
+  body.nav-open .nav-toggle span { background: #fff; }
+  body.nav-open .nav-toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   body.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
-  body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
   .hero { min-height: 80vh; }
   .hero-inner { padding: 60px 20px; }
   .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 24px; }

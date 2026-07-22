@@ -257,7 +257,7 @@ function renderPartenaires(items) {
 }
 
 const MATCHS_A_VENIR =
-  '<p style="grid-column:1/-1;text-align:center;color:#b8b8b8;padding:20px 0;">Le calendrier de la saison arrive bientôt. <a href="calendrier.html" style="color:#F26522;">Voir toutes les équipes →</a></p>';
+  '<p style="grid-column:1/-1;text-align:center;color:#b8b8b8;padding:20px 0;">Le calendrier de la saison arrive bientôt. <a href="equipes.html" style="color:#F26522;">Voir toutes les équipes →</a></p>';
 
 function renderMatchs(items) {
   const sorted = items

@@ -243,17 +243,20 @@ function renderPartenaires(items) {
   const sorted = items
     .slice()
     .sort((a, b) => (a.frontmatter?.order || 0) - (b.frontmatter?.order || 0));
-  return sorted
-    .map((item) => {
-      const fm = item.frontmatter || {};
-      const inner = fm.logo
-        ? `<img src="${encodeURI(fm.logo)}" alt="${(fm.name || "").replace(/"/g, "&quot;")}" loading="lazy">`
-        : `<span>${fm.name || ""}</span>`;
-      return fm.url
-        ? `<a class="sponsor-card" href="${fm.url}" target="_blank" rel="noopener" title="${(fm.name || "").replace(/"/g, "&quot;")}">${inner}</a>`
-        : `<div class="sponsor-card" title="${(fm.name || "").replace(/"/g, "&quot;")}">${inner}</div>`;
-    })
-    .join("");
+  const card = (item) => {
+    const fm = item.frontmatter || {};
+    const inner = fm.logo
+      ? `<img src="${encodeURI(fm.logo)}" alt="${(fm.name || "").replace(/"/g, "&quot;")}" loading="lazy">`
+      : `<span>${fm.name || ""}</span>`;
+    return fm.url
+      ? `<a class="sponsor-card" href="${fm.url}" target="_blank" rel="noopener" title="${(fm.name || "").replace(/"/g, "&quot;")}">${inner}</a>`
+      : `<div class="sponsor-card" title="${(fm.name || "").replace(/"/g, "&quot;")}">${inner}</div>`;
+  };
+  const oneSet = sorted.map(card).join("");
+  // Remplit la bande même avec peu de logos, puis duplique le tout pour une boucle sans couture.
+  const fill = Math.max(1, Math.ceil(8 / sorted.length));
+  const filled = oneSet.repeat(fill);
+  return `<div class="sponsors-marquee"><div class="sponsors-track">${filled}${filled}</div></div>`;
 }
 
 const MATCHS_A_VENIR =

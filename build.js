@@ -721,6 +721,27 @@ function build() {
     fs.rmSync(path.join(DIST, "js", "news-pagination.js"), { force: true });
   }
 
+  // 4d. Bandeau partenaires avant le footer, sur les pages qui n'en ont pas déjà
+  const partLogos = renderPartenaires(partenaires);
+  if (partLogos) {
+    const strip = `
+  <section class="section section-sponsors section-sponsors-strip">
+    <div class="container">
+      <span class="eyebrow eyebrow-center">Nos partenaires</span>
+      <div class="sponsors-grid">${partLogos}
+      </div>
+    </div>
+  </section>
+`;
+    for (const file of listHtml(DIST)) {
+      let html = fs.readFileSync(file, "utf8");
+      if (html.includes("section-sponsors") || !html.includes('<footer class="site-footer">')) continue;
+      html = html.replace('<footer class="site-footer">', strip + '  <footer class="site-footer">');
+      fs.writeFileSync(file, html);
+    }
+    console.log("✓ Bandeau partenaires ajouté aux pages sans section sponsors");
+  }
+
   // 5. Fichiers/pages qui ne sont plus servis (gabarits + ancienne page Calendrier)
   fs.rmSync(path.join(DIST, "actualite.html"), { force: true });
   fs.rmSync(path.join(DIST, "equipe.html"), { force: true });

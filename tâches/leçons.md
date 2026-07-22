@@ -117,3 +117,14 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 - Croix de fermeture (X) : la rendre franchement visible (barres ≥3px + pastille de fond), pas juste un burger qui pivote finement.
 **Piège de l'outil de preview :** un `left_click` synthétique sur le bouton burger ne déclenche pas toujours le handler → tester en plus avec `btn.click()` en JS et vérifier `document.body.classList.contains('nav-open')`. Ne pas conclure "le menu est cassé" sur la seule foi d'un clic outil.
 **Why :** un vrai problème d'UX mobile visible par l'utilisateur = perte de confiance immédiate ("ce n'est pas normal qu'il y ait encore des problèmes comme ça").
+
+---
+
+## Déploiement / Cloudflare Pages (2026-07-22)
+
+### Cloudflare Pages sert des URLs « propres » : `/page.html` fait un 308 vers `/page`
+**Contexte :** après avoir ajouté `mentions-legales.html`, la vérif `curl https://.../mentions-legales.html` semblait renvoyer l'accueil, et j'ai cru à un bug de propagation (2 min de polling perdues). En réalité Cloudflare Pages redirige (308) `/mentions-legales.html` → `/mentions-legales` (sans extension). `curl` sans `-L` s'arrête au 308 ; le navigateur, lui, pouvait afficher une page en cache local sur l'ancienne URL.
+**Règle :**
+- Pour tester une page en ligne sur Cloudflare Pages : utiliser `curl -sL` (suivre les redirections) OU tester directement l'URL sans `.html`.
+- Les liens internes en `.html` fonctionnent quand même (redirigés), mais l'URL canonique servie est **sans extension**.
+- Si le navigateur affiche l'accueil pour une nouvelle page : c'est du cache local sur l'ancienne URL 404 → recharger l'URL propre (`/page`) avec un `?v=timestamp`, ne pas conclure trop vite à un échec de déploiement.

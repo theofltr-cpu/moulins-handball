@@ -697,6 +697,7 @@ function build() {
   const tokenMap = {};
   flatten("site", readSettings("site.md"), tokenMap);
   flatten("accueil", readSettings("accueil.md"), tokenMap);
+  tokenMap["stats.equipes"] = String(equipes.length); // nombre réel d'équipes (connecté)
   flatten("club", clubPage, tokenMap);
   tokenMap["club.histoire"] = marked.parse(clubPage.histoire || "");
 

@@ -8,7 +8,7 @@ histoire: |
 
   De l'éveil sportif des plus jeunes aux championnats séniors, nous accueillons les pratiquants de tous âges autour d'un projet sportif solide : la formation, l'engagement collectif et le plaisir du jeu.
 
-  Le club compte aujourd'hui plus de **200 licenciés**, encadrés par une équipe de bénévoles et d'éducateurs diplômés. Affilié à la Fédération Française de Handball, il est reconnu pour son sérieux et sa convivialité.
+  Le club compte aujourd'hui plus de **170 licenciés**, encadrés par une équipe de bénévoles et d'éducateurs diplômés. Affilié à la Fédération Française de Handball, il est reconnu pour son sérieux et sa convivialité.
 bureau:
   - { name: Stéphane Duchene, role: Président, note: "Référent général du club. Coordination, projet sportif et relations institutionnelles." }
   - { name: Nom à compléter, role: Vice-Président, note: "Soutien à la présidence et pilotage des projets transversaux." }

@@ -10,10 +10,12 @@ histoire: |
 
   Le club compte aujourd'hui plus de **170 licenciés**, encadrés par une équipe de bénévoles et d'éducateurs diplômés. Affilié à la Fédération Française de Handball, il est reconnu pour son sérieux et sa convivialité.
 bureau:
-  - { name: Stéphane Duchene, role: Président, note: "Référent général du club. Coordination, projet sportif et relations institutionnelles." }
-  - { name: Nom à compléter, role: Vice-Président, note: "Soutien à la présidence et pilotage des projets transversaux." }
-  - { name: Nom à compléter, role: Secrétaire, note: "Gestion administrative, licences FFHB et communication interne." }
-  - { name: Nom à compléter, role: Trésorier, note: "Gestion financière, subventions et partenariats sponsors." }
+  - { name: Yvan LEBERT, role: Président }
+  - { name: Alexandre CRIDELICH, role: Vice-président }
+  - { name: Sandrine WEISSE, role: Secrétaire }
+  - { name: Vanessa SAGGIORATO, role: Secrétaire adjointe }
+  - { name: Nicolas BRETNACHET, role: Trésorier }
+  - { name: Audrey MORDENTI, role: Trésorière adjointe }
 chiffres:
   - { valeur: "170", label: Licenciés }
   - { valeur: "8", label: Équipes engagées }

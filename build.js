@@ -615,12 +615,6 @@ function build() {
 
   // 3. Injection dans les pages
   const pages = {
-    "actualites.html": (html) => {
-      const featured = actualites.find((i) => i.frontmatter?.featured) || actualites[0];
-      html = injectCms(html, "actualites-featured", renderActualitesFeatured(actualites));
-      html = injectCms(html, "actualites-grid", renderActualitesGrid(actualites.filter((i) => i !== featured)));
-      return html;
-    },
     "equipes.html": (html) => injectCms(html, "equipes", renderEquipes(equipes)),
     "club.html": (html) => {
       html = injectCms(html, "bureau", renderBureau(clubPage.bureau));
@@ -685,6 +679,46 @@ function build() {
     page = injectCms(page, "equipe-calendrier", renderTeamCalendar(matchs, teamSlug));
     fs.writeFileSync(path.join(DIST, "equipe", `${teamSlug}.html`), page);
     console.log(`✓ equipe/${teamSlug}.html`);
+  }
+
+  // 4c. Actualités : VRAIES pages numérotées (6 par page), pas de pagination JS
+  {
+    const perPage = 6;
+    const featured = actualites.find((i) => i.frontmatter?.featured) || actualites[0];
+    const rest = actualites.filter((i) => i !== featured);
+    const pageCount = Math.max(1, Math.ceil(rest.length / perPage));
+    const src = stripCmsScripts(fs.readFileSync(path.join(DIST, "actualites.html"), "utf8"))
+      .replace(/\s*<script src="js\/news-pagination\.js"[^>]*><\/script>/, "");
+    const href = (n) => (n === 1 ? "/actualites.html" : `/actualites/${n}.html`);
+    const links = (cur) => {
+      if (pageCount <= 1) return "";
+      let h = `<a href="${href(Math.max(1, cur - 1))}" class="page-link${cur === 1 ? " disabled" : ""}">← Précédent</a>`;
+      for (let n = 1; n <= pageCount; n++)
+        h += `<a href="${href(n)}" class="page-link${n === cur ? " active" : ""}">${n}</a>`;
+      h += `<a href="${href(Math.min(pageCount, cur + 1))}" class="page-link${cur === pageCount ? " disabled" : ""}">Suivant →</a>`;
+      return h;
+    };
+    fs.mkdirSync(path.join(DIST, "actualites"), { recursive: true });
+    for (let pg = 1; pg <= pageCount; pg++) {
+      const items = rest.slice((pg - 1) * perPage, pg * perPage);
+      let html = src;
+      if (pg === 1) {
+        html = injectCms(html, "actualites-featured", renderActualitesFeatured(actualites));
+        html = injectCms(html, "actualites-grid", renderActualitesGrid(items));
+      } else {
+        html = html.replace(/\s*<!-- FEATURED -->[\s\S]*?<\/section>/, "");
+        html = injectCms(html, "actualites-grid", renderActualitesGrid(items));
+        html = html
+          .replace(/(href|src)="(css|img|js)\//g, '$1="/$2/')
+          .replace(/(href)="([a-z-]+\.html)(#[a-z-]+)?"/g, '$1="/$2$3"')
+          .replace(/<title>[^<]*<\/title>/, `<title>Actualités — page ${pg} — Moulins-lès-Metz Handball</title>`);
+      }
+      html = html.replace(/<div class="pagination"[^>]*>[\s\S]*?<\/div>/, `<div class="pagination">${links(pg)}</div>`);
+      const out = pg === 1 ? path.join(DIST, "actualites.html") : path.join(DIST, "actualites", `${pg}.html`);
+      fs.writeFileSync(out, html);
+      console.log(`✓ ${pg === 1 ? "actualites.html" : "actualites/" + pg + ".html"}`);
+    }
+    fs.rmSync(path.join(DIST, "js", "news-pagination.js"), { force: true });
   }
 
   // 5. Fichiers/pages qui ne sont plus servis (gabarits + ancienne page Calendrier)

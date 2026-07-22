@@ -104,3 +104,16 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 - Après un déploiement Cloudflare : attendre ~1-2 min ET re-tester depuis le navigateur de l'utilisateur (la propagation edge peut traîner localement même quand curl voit déjà la nouvelle version).
 - Quand un bug est re-signalé 2+ fois alors que "ça marche" côté serveur : c'est du cache/propagation → régler la CAUSE (en-tête no-cache) au lieu de répéter "vide ton cache".
 **Fait :** ajout d'un fichier `_headers` avec `Cache-Control: no-cache` pour que le navigateur revalide toujours.
+
+---
+
+## Responsive / Menu mobile (2026-07-22)
+
+### Ne jamais cacher un menu plein écran `position:fixed` en le poussant hors-écran (`transform: translateX(100%)`)
+**Contexte :** le menu burger était masqué avec `position:fixed; transform:translateX(100%)`. Sur mobile, quand Théo dézoomait (pinch-zoom-out), Safari révèle le viewport visuel AU-DELÀ du viewport de mise en page → le menu hors-écran réapparaissait sur le côté. `body{overflow-x:hidden}` NE corrige PAS ça car il ne rogne pas les éléments `position:fixed`.
+**Règle :**
+- Pour masquer un overlay `position:fixed` : utiliser `opacity:0; visibility:hidden; pointer-events:none` (apparition en fondu SUR PLACE), jamais un déplacement hors-écran. Zéro débordement possible, invisible même au dézoom.
+- Toujours vérifier `document.documentElement.scrollWidth - clientWidth === 0` (menu fermé ET ouvert) après une modif de menu/overlay mobile.
+- Croix de fermeture (X) : la rendre franchement visible (barres ≥3px + pastille de fond), pas juste un burger qui pivote finement.
+**Piège de l'outil de preview :** un `left_click` synthétique sur le bouton burger ne déclenche pas toujours le handler → tester en plus avec `btn.click()` en JS et vérifier `document.body.classList.contains('nav-open')`. Ne pas conclure "le menu est cassé" sur la seule foi d'un clic outil.
+**Why :** un vrai problème d'UX mobile visible par l'utilisateur = perte de confiance immédiate ("ce n'est pas normal qu'il y ait encore des problèmes comme ça").

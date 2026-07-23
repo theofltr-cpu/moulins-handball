@@ -1429,7 +1429,8 @@ a { color: inherit; text-decoration: none; }
 .team-hero-inner {
   position: relative;
   z-index: 2;
-  padding: 48px 0;
+  padding-top: 48px;
+  padding-bottom: 48px;
   width: 100%;
 }
 .team-back {

@@ -1,10 +1,10 @@
 ---
-hero_title: 40 ans de passion
+hero_title: 10 ans de passion
 hero_accent: handball
 hero_intro: "De ses premières années aux championnats régionaux d'aujourd'hui, le club construit chaque saison son histoire avec les mêmes valeurs : engagement, partage, exigence."
 histoire_titre: Un club, une famille
 histoire: |
-  Fondé dans les années 80 par des passionnés de handball de Moulins-lès-Metz, le club s'est progressivement structuré pour proposer aujourd'hui une école de hand complète et des équipes engagées en compétition à tous les niveaux.
+  Fondé par des passionnés de handball de Moulins-lès-Metz, le club s'est progressivement structuré pour proposer aujourd'hui une école de hand complète et des équipes engagées en compétition à tous les niveaux.
 
   De l'éveil sportif des plus jeunes aux championnats séniors, nous accueillons les pratiquants de tous âges autour d'un projet sportif solide : la formation, l'engagement collectif et le plaisir du jeu.
 

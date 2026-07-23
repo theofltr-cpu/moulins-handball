@@ -845,6 +845,125 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+/* ========== PHOTOTHÈQUE ========== */
+
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+.album {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--black-2);
+}
+.album-cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: #1a1a1a center / cover no-repeat;
+}
+.album-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 25%, rgba(5, 5, 5, 0.9) 100%);
+}
+.album-cover::before {
+  content: "Voir l'album →";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 6px 11px;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.album:hover .album-cover::before { opacity: 1; }
+.album.open .album-cover::before { content: "Fermer ▲"; opacity: 1; }
+.album-info {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 16px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+}
+.album-title { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.15; }
+.album-count {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--orange);
+}
+.album-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 6px;
+  padding: 12px;
+}
+.album-photo {
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #1a1a1a center / cover no-repeat;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.album-photo:hover { transform: scale(1.04); opacity: 0.9; }
+
+/* Visionneuse plein écran */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.94);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox.open { display: flex; }
+.lightbox-img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.lightbox-close, .lightbox-nav {
+  background: none;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+.lightbox-close:hover, .lightbox-nav:hover { opacity: 1; }
+.lightbox-close { position: absolute; top: 16px; right: 22px; font-size: 24px; padding: 10px; }
+.lightbox-nav { font-size: 46px; line-height: 1; padding: 14px; }
+.lightbox-prev { position: absolute; left: 6px; }
+.lightbox-next { position: absolute; right: 6px; }
+@media (max-width: 600px) {
+  .lightbox-nav { font-size: 32px; }
+  .album-photos { grid-template-columns: repeat(3, 1fr); }
+}
+
 /* ========== FOOTER ========== */
 
 .site-footer {

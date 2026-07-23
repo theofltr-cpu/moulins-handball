@@ -259,6 +259,34 @@ function renderPartenaires(items) {
   return `<div class="sponsors-marquee"><div class="sponsors-track">${filled}${filled}</div></div>`;
 }
 
+function renderAlbums(items) {
+  if (!items || items.length === 0) return null;
+  const sorted = items
+    .slice()
+    .sort((a, b) => new Date(b.frontmatter?.date || 0) - new Date(a.frontmatter?.date || 0));
+  return sorted
+    .map((it) => {
+      const fm = it.frontmatter || {};
+      const photos = Array.isArray(fm.photos) ? fm.photos.filter(Boolean) : [];
+      const cover = fm.cover || photos[0] || "";
+      const title = esc(fm.title || "Album");
+      const n = photos.length;
+      const thumbs = photos
+        .map(
+          (p) =>
+            `<button type="button" class="album-photo" data-full="${encodeURI(p)}" style="background-image:url('${encodeURI(p)}')" aria-label="Agrandir la photo"></button>`,
+        )
+        .join("");
+      return `<article class="album">
+        <button type="button" class="album-cover" data-album-toggle aria-expanded="false"${cover ? ` style="background-image:url('${encodeURI(cover)}')"` : ""}>
+          <span class="album-info"><span class="album-title">${title}</span><span class="album-count">${n} photo${n > 1 ? "s" : ""}</span></span>
+        </button>
+        <div class="album-photos" hidden>${thumbs}</div>
+      </article>`;
+    })
+    .join("");
+}
+
 const MATCHS_A_VENIR =
   '<p style="grid-column:1/-1;text-align:center;color:#b8b8b8;padding:20px 0;">Le calendrier de la saison arrive bientôt. <a href="equipes.html" style="color:#F26522;">Voir toutes les équipes →</a></p>';
 
@@ -611,6 +639,7 @@ function build() {
   const equipes = loadCollection("equipes");
   const matchs = loadCollection("matchs");
   const partenaires = loadCollection("partenaires");
+  const albums = loadCollection("photos");
   const clubPage = readPage("club.md");
   console.log(
     `Contenus : ${actualites.length} actu(s), ${equipes.length} équipe(s), ${matchs.length} match(s)`,
@@ -625,7 +654,7 @@ function build() {
       html = injectCms(html, "partenaires", renderPartenaires(partenaires));
       return html;
     },
-    "photos.html": (html) => html,
+    "photos.html": (html) => injectCms(html, "albums", renderAlbums(albums)),
   };
   // Section "Nos équipes" de l'accueil : dynamique comme la page Équipes
   pages["index.html"] = (html) => {

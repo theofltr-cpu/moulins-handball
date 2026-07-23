@@ -10,5 +10,6 @@ stat3_valeur: "2"
 stat3_label: Gymnases
 stat4_valeur: "40"
 stat4_label: D'histoire
-recrutement_image: img/uploads/belle-victoire-de-nos-seniors-garcons.jpg
+recrutement_image: img/uploads/recrutement-jeunes.jpg
+recrutement_image_equipes: img/uploads/belle-victoire-de-nos-seniors-garcons.jpg
 ---

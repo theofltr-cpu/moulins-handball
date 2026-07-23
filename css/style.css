@@ -2070,9 +2070,8 @@ a { color: inherit; text-decoration: none; }
   .cal-row { grid-template-columns: 80px 1fr; gap: 16px; }
   .cal-comp, .cal-teams, .cal-place, .cal-link { grid-column: 2; }
   .fed-card { grid-template-columns: 1fr; }
-}
 
-@media (max-width: 768px) {
+  /* --- Menu en burger dès la tablette (évite le débordement du header) --- */
   .top-bar { display: none; }
   .header-inner {
     grid-template-columns: 1fr auto;
@@ -2080,7 +2079,7 @@ a { color: inherit; text-decoration: none; }
     padding: 16px 20px;
   }
   .site-header { position: sticky; top: 0; z-index: 300; }
-  .nav-toggle { display: flex; }
+  .nav-toggle { display: flex; z-index: 320; position: relative; transition: background 0.25s ease; }
   .main-nav {
     display: flex;
     position: fixed;
@@ -2114,15 +2113,15 @@ a { color: inherit; text-decoration: none; }
   }
   body.nav-open { overflow: hidden; }
   body.nav-open .main-nav { opacity: 1; visibility: visible; pointer-events: auto; }
-  /* CTA masqué dans la barre mobile (accessible via le menu) */
   .header-cta { display: none; }
-  /* burger -> croix (X) bien visible quand le menu est ouvert */
-  .nav-toggle { z-index: 320; position: relative; transition: background 0.25s ease; }
   body.nav-open .nav-toggle { background: rgba(255, 255, 255, 0.1); border-radius: 50%; }
   body.nav-open .nav-toggle span { background: #fff; }
   body.nav-open .nav-toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   body.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
   body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+}
+
+@media (max-width: 768px) {
   .hero { min-height: 80vh; }
   .hero-inner { padding: 60px 20px; }
   .section-join { padding: 90px 0; }

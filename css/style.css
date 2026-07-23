@@ -1802,6 +1802,11 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 32px;
   font-size: 15px;
 }
+.form-note {
+  color: var(--gray-2);
+  font-size: 13px;
+  margin-top: 12px;
+}
 
 .contact-form {
   display: flex;

@@ -793,7 +793,7 @@ function build() {
   const email = tokenMap["site.email"] || "";
   tokenMap["contact.form_open"] = contactPage.formspree
     ? `<form class="contact-form" action="${contactPage.formspree}" method="POST">`
-    : `<form class="contact-form" onsubmit="event.preventDefault(); alert('Le formulaire sera bientôt actif. En attendant, écrivez-nous à ${email}.');">`;
+    : `<form class="contact-form" data-mailto="${email}">`;
   let tokenPages = 0;
   for (const file of listHtml(DIST)) {
     const before = fs.readFileSync(file, "utf8");

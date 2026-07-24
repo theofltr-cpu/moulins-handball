@@ -70,6 +70,28 @@
   .gthumb img{width:100%;height:100%;object-fit:cover;display:block}
   .gthumb button{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:11px;line-height:1;display:grid;place-items:center;padding:0}
   .gthumb button:hover{background:var(--red)}
+  .dash{max-width:900px}
+  .dash-hero{margin-bottom:22px}
+  .dash-hero h3{font-size:20px;font-weight:800}
+  .dash-hero p{margin-top:3px}
+  .dash-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:26px}
+  .dash-card{display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:15px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;text-align:left;color:var(--ink);transition:border-color .15s,transform .15s}
+  .dash-card:hover{border-color:var(--orange-line);transform:translateY(-2px)}
+  .dash-ico{font-size:19px}
+  .dash-num{font-size:26px;font-weight:800;line-height:1}
+  .dash-lab{font-size:12.5px;color:var(--muted);font-weight:600}
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dash-block{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .dash-block h4{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px}
+  .dash-actions{display:flex;flex-direction:column;gap:8px}
+  .dash-action{text-align:left;padding:11px 14px;background:var(--orange-soft);border:1px solid var(--orange-line);color:var(--ink);border-radius:9px;font-weight:600;font-size:13.5px}
+  .dash-action:hover{background:rgba(242,101,34,.22)}
+  .dash-match{display:flex;flex-direction:column;gap:1px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .dash-match:last-child{border-bottom:0;padding-bottom:0}
+  .dash-match-cat{font-weight:700;font-size:13.5px}
+  .dash-match-vs{font-size:13px;color:var(--ink)}
+  .dash-match-meta{font-size:12px;color:var(--muted)}
+  @media(max-width:700px){.dash-grid{grid-template-columns:1fr}}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#101418;border:1px solid var(--line);padding:12px 18px;border-radius:10px;font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:50}
   .toast.ok{border-color:var(--green-line);color:#a7e9c0}
   .muted{color:var(--muted)}.center{text-align:center;padding:50px 0;color:var(--faint)}
@@ -176,9 +198,52 @@ function slugify(s){return(s||"element").normalize("NFD").replace(/[̀-ͯ]/g,"")
 function startApp(email){
   login.classList.add("hidden");app.classList.remove("hidden");
   whoEmail.textContent=email;ava.textContent=(email[0]||"?").toUpperCase();
-  nav.innerHTML="";COLLECTIONS.forEach(c=>{const b=document.createElement("button");b.textContent=c.label;b.dataset.col=c.id;b.onclick=()=>openCollection(c.id);nav.appendChild(b);});
-  openCollection("actualites");
+  nav.innerHTML="";
+  const db=document.createElement("button");db.textContent="Tableau de bord";db.dataset.col="dashboard";db.onclick=()=>openDashboard();nav.appendChild(db);
+  COLLECTIONS.forEach(c=>{const b=document.createElement("button");b.textContent=c.label;b.dataset.col=c.id;b.onclick=()=>openCollection(c.id);nav.appendChild(b);});
+  openDashboard();
 }
+
+async function openDashboard(){
+  CURRENT=null;setActive("dashboard");
+  viewTitle.textContent="Tableau de bord";newBtn.classList.add("hidden");
+  content.innerHTML='<div class="center">Chargement…</div>';
+  try{
+    const results=await Promise.all(COLLECTIONS.map(c=>api("/api/list/"+c.folder).then(d=>({id:c.id,items:d.items||[]})).catch(()=>({id:c.id,items:[]}))));
+    const byId={};results.forEach(r=>byId[r.id]=r);
+    const count=id=>byId[id]?byId[id].items.length:0;
+    const cards=[
+      {id:"actualites",icon:"📰",label:"Actualités"},
+      {id:"equipes",icon:"🤾",label:"Équipes"},
+      {id:"matchs",icon:"📅",label:"Matchs"},
+      {id:"photos",icon:"📸",label:"Albums photo"},
+      {id:"partenaires",icon:"🤝",label:"Partenaires"}
+    ];
+    const cardsHtml=cards.map(c=>`<button class="dash-card" onclick="openCollection('${c.id}')"><span class="dash-ico">${c.icon}</span><span class="dash-num">${count(c.id)}</span><span class="dash-lab">${esc(c.label)}</span></button>`).join("");
+    const actions=[
+      {id:"actualites",label:"Nouvelle actualité"},
+      {id:"matchs",label:"Nouveau match / résultat"},
+      {id:"photos",label:"Nouvel album photo"}
+    ];
+    const actionsHtml=actions.map(a=>`<button class="dash-action" onclick="quickNew('${a.id}')">＋ ${esc(a.label)}</button>`).join("");
+    const matchs=(byId["matchs"]?byId["matchs"].items:[]).map(x=>x.fields);
+    const upcoming=matchs.filter(m=>(m.status||"")!=="Joué").sort((a,b)=>(""+(a.date||"")).localeCompare(""+(b.date||""))).slice(0,4);
+    const matchsHtml=upcoming.length?upcoming.map(m=>{
+      const lieu=m.lieu_match==="Extérieur"?"Extérieur":"Domicile";
+      const d=m.date?fmtDate(m.date):"Date à définir";
+      return `<div class="dash-match"><span class="dash-match-cat">${esc(m.team_category||"Équipe")}</span><span class="dash-match-vs">vs ${esc(m.adversaire||"À venir")}</span><span class="dash-match-meta">${lieu} · ${esc(d)}</span></div>`;
+    }).join(""):'<p class="muted" style="font-size:13px;margin:0">Aucun match à venir. Ajoutez-en un depuis « Matchs ».</p>';
+    content.innerHTML=`<div class="dash">
+      <div class="dash-hero"><h3>Bonjour 👋</h3><p class="muted">Voici l'état de votre site. Choisissez une rubrique ou une action rapide.</p></div>
+      <div class="dash-cards">${cardsHtml}</div>
+      <div class="dash-grid">
+        <section class="dash-block"><h4>Actions rapides</h4><div class="dash-actions">${actionsHtml}</div></section>
+        <section class="dash-block"><h4>Prochains matchs</h4>${matchsHtml}</section>
+      </div>
+    </div>`;
+  }catch(e){content.innerHTML=`<div class="center">Erreur : ${esc(e.message)}</div>`;}
+}
+async function quickNew(id){await openCollection(id);newEntry();}
 function setActive(id){[...nav.querySelectorAll("button")].forEach(b=>b.classList.toggle("active",b.dataset.col===id));}
 
 async function openCollection(id){

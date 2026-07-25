@@ -50,7 +50,7 @@
   .topbar h2{font-size:17px;font-weight:800}
   .topbar .btn{margin-left:auto;display:inline-flex;gap:7px;align-items:center;padding:9px 15px;font-size:13px}
   .content{padding:20px 24px;overflow:auto}
-  .row{display:grid;grid-template-columns:1fr 160px 120px 90px;gap:12px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}
+  .row{display:grid;grid-template-columns:1fr 150px 118px 116px;gap:12px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}
   .row:hover{background:var(--panel2)}
   .row .t{font-weight:600;display:flex;align-items:center;gap:10px;min-width:0}
   .row .t .thumb{width:36px;height:36px;border-radius:7px;flex:none;background:#222 center/cover;border:1px solid var(--line)}
@@ -99,6 +99,14 @@
   .tl-count{font-size:11px;font-weight:700;color:var(--orange);background:var(--orange-soft);border-radius:999px;padding:2px 9px}
   .tl-add{padding:7px 13px!important;font-size:12.5px!important;flex:none}
   .tl-empty{padding:12px 4px;color:var(--faint);font-size:13px}
+  .nav-sep{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);font-weight:700;padding:16px 11px 6px}
+  .see-site{display:block;margin:6px 0 10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12.5px;font-weight:600;text-decoration:none;transition:color .15s,border-color .15s}
+  .see-site:hover{color:var(--ink);border-color:var(--orange-line)}
+  .grouplist{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+  .gl-row{display:flex;gap:8px;align-items:center}
+  .gl-row input{flex:1}
+  .gl-del{flex:none;width:34px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:12px}
+  .gl-del:hover{background:var(--red);color:#fff;border-color:var(--red)}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#101418;border:1px solid var(--line);padding:12px 18px;border-radius:10px;font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:50}
   .toast.ok{border-color:var(--green-line);color:#a7e9c0}
   .muted{color:var(--muted)}.center{text-align:center;padding:50px 0;color:var(--faint)}
@@ -130,6 +138,7 @@
   <aside class="side">
     <div class="brand"><span class="shield">MLM</span><div><b>Le club</b><span>Backoffice</span></div></div>
     <nav class="nav" id="nav"></nav>
+    <a class="see-site" href="https://moulins-handball.pages.dev" target="_blank" rel="noopener">↗ Voir le site</a>
     <div class="side-foot">
       <span class="avatar" id="ava">?</span>
       <div class="who"><span class="em" id="whoEmail"></span><span class="lo" onclick="logout()">Déconnexion</span></div>
@@ -178,6 +187,45 @@ const COLLECTIONS=[
     {name:"cover",label:"Photo de couverture",type:"image",hint:"Optionnel — sinon la 1re photo de l'album est utilisée"},
     {name:"photos",label:"Photos de l'album",type:"gallery",hint:"Ajoutez plusieurs photos d'un coup depuis votre téléphone ou votre ordinateur"}]},
 ];
+// Pages « fixes » du site (un seul fichier chacune) éditables directement.
+const PAGES=[
+  {id:"reglages",label:"Réglages du site",file:"content/settings/site.md",fields:[
+    {name:"saison",label:"Saison (affichée sur les équipes)",type:"text"},
+    {name:"championnat",label:"Championnat",type:"text"},
+    {name:"cta_label",label:"Texte du bouton « Nous rejoindre »",type:"text"},
+    {name:"cta_url",label:"Lien du bouton (page contact ou HelloAsso)",type:"text"},
+    {name:"email",label:"E-mail du club",type:"text"},
+    {name:"gymnase",label:"Gymnase principal",type:"text"},
+    {name:"ville",label:"Ville / code postal",type:"text"},
+    {name:"facebook",label:"Lien Facebook",type:"text"},
+    {name:"instagram",label:"Lien Instagram",type:"text"},
+    {name:"youtube",label:"Lien YouTube (optionnel)",type:"text"},
+    {name:"footer_description",label:"Texte du pied de page",type:"textarea"}]},
+  {id:"page_accueil",label:"Page d'accueil",file:"content/settings/accueil.md",fields:[
+    {name:"hero_ligne1",label:"Titre — ligne 1",type:"text"},
+    {name:"hero_ligne2",label:"Titre — ligne 2",type:"text"},
+    {name:"hero_sous_titre",label:"Phrase d'accroche",type:"text"},
+    {name:"stat1_valeur",label:"Chiffre 1 — valeur",type:"text"},{name:"stat1_label",label:"Chiffre 1 — libellé",type:"text"},
+    {name:"stat2_valeur",label:"Chiffre 2 — valeur",type:"text"},{name:"stat2_label",label:"Chiffre 2 — libellé",type:"text"},
+    {name:"stat3_valeur",label:"Chiffre 3 — valeur",type:"text"},{name:"stat3_label",label:"Chiffre 3 — libellé",type:"text"},
+    {name:"recrutement_image",label:"Photo « Rejoins l'aventure » (accueil)",type:"image"},
+    {name:"recrutement_image_equipes",label:"Photo « Tu veux nous rejoindre ? » (page Équipes)",type:"image"}]},
+  {id:"page_contact",label:"Page Contact",file:"content/pages/contact.md",fields:[
+    {name:"hero_title",label:"Titre",type:"text"},
+    {name:"hero_accent",label:"Titre — mot en orange",type:"text"},
+    {name:"hero_intro",label:"Introduction",type:"textarea"},
+    {name:"president",label:"Président",type:"text"},
+    {name:"president_tel",label:"Téléphone du président",type:"text"},
+    {name:"formspree",label:"URL Formspree (optionnel)",type:"text",hint:"Vide = le formulaire ouvre l'appli mail (mailto). Renseigné = envoi 100% en ligne."}]},
+  {id:"page_club",label:"Page Le Club",file:"content/pages/club.md",fields:[
+    {name:"hero_title",label:"Titre",type:"text"},
+    {name:"hero_accent",label:"Titre — mot en orange",type:"text"},
+    {name:"hero_intro",label:"Introduction",type:"textarea"},
+    {name:"histoire_titre",label:"Titre de la partie « Notre histoire »",type:"text"},
+    {name:"histoire",label:"Texte de l'histoire",type:"markdown"},
+    {name:"bureau",label:"Le bureau",type:"grouplist",sub:[{name:"name",label:"Nom"},{name:"role",label:"Rôle"}]},
+    {name:"chiffres",label:"Les chiffres du club",type:"grouplist",sub:[{name:"valeur",label:"Valeur (ex. 170)"},{name:"label",label:"Libellé (ex. Licenciés)"}]}]}
+];
 let CURRENT=null;
 
 async function api(path,opts={}){
@@ -208,6 +256,8 @@ function startApp(email){
   nav.innerHTML="";
   const db=document.createElement("button");db.textContent="Tableau de bord";db.dataset.col="dashboard";db.onclick=()=>openDashboard();nav.appendChild(db);
   COLLECTIONS.forEach(c=>{const b=document.createElement("button");b.textContent=c.label;b.dataset.col=c.id;b.onclick=()=>openCollection(c.id);nav.appendChild(b);});
+  const sep=document.createElement("div");sep.className="nav-sep";sep.textContent="Pages du site";nav.appendChild(sep);
+  PAGES.forEach(p=>{const b=document.createElement("button");b.textContent=p.label;b.dataset.col=p.id;b.onclick=()=>openPage(p.id);nav.appendChild(b);});
   openDashboard();
 }
 
@@ -270,7 +320,7 @@ async function openCollection(id){
       const date=CURRENT.date&&f[CURRENT.date]?`<span class="date">${fmtDate(f[CURRENT.date])}</span>`:'<span></span>';
       const img=f.image||f.photo||f.logo||f.cover;
       const thumb=img?`<span class="thumb" style="background-image:url('${esc(img)}')"></span>`:`<span class="thumb"></span>`;
-      return `<div class="row"><div class="t">${thumb}<b>${esc(title)}</b></div>${chip}${date}<div class="rowact"><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
+      return `<div class="row"><div class="t">${thumb}<b>${esc(title)}</b></div>${chip}${date}<div class="rowact"><button title="Dupliquer" onclick="dupEntry('${esc(it.path)}')">⧉</button><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
     }).join("");
   }catch(e){content.innerHTML=`<div class="center">Erreur : ${esc(e.message)}</div>`;}
 }
@@ -293,7 +343,7 @@ function renderMatchsByTeam(items){
     const rows=list.length?list.map(it=>{
       const f=it.fields,title=matchTitle(f),date=f.date?fmtDate(f.date):"—";
       const chip=f.status?`<span class="chip">${esc(f.status)}</span>`:'<span></span>';
-      return `<div class="row"><div class="t"><b>${esc(title)}</b></div>${chip}<span class="date">${esc(date)}</span><div class="rowact"><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
+      return `<div class="row"><div class="t"><b>${esc(title)}</b></div>${chip}<span class="date">${esc(date)}</span><div class="rowact"><button title="Dupliquer" onclick="dupEntry('${esc(it.path)}')">⧉</button><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
     }).join(""):'<div class="tl-empty">Aucun match pour cette équipe.</div>';
     return `<section class="tl-group">
       <div class="tl-head"><h3>${esc(team)} <span class="tl-count">${list.length}</span></h3>
@@ -303,20 +353,29 @@ function renderMatchsByTeam(items){
   }).join("");
 }
 function unquote(v){if((v[0]==='"'&&v.endsWith('"'))||(v[0]==="'"&&v.endsWith("'")))return v.slice(1,-1);return v;}
+function parseInlineObj(s){const o={};s.replace(/^\{|\}$/g,"").split(/,(?![^{]*\})/).forEach(p=>{const m=p.match(/^\s*([a-zA-Z0-9_]+)\s*:\s*(.*)$/);if(m)o[m[1]]=unquote(m[2].trim());});return o;}
 function parseFront(text){
   const m=(text||"").match(/^---\r?\n([\s\S]+?)\r?\n---\r?\n?([\s\S]*)$/);const data={};let body="";
   if(m){body=m[2]||"";const lines=m[1].split(/\r?\n/);
     for(let i=0;i<lines.length;i++){
       const mm=lines[i].match(/^([a-zA-Z0-9_]+):\s*(.*)$/);if(!mm)continue;
       const key=mm[1];let v=mm[2].trim();
-      if(v===""){ // liste YAML éventuelle (lignes « - … » indentées)
+      if(v==="|"||v===">"){ // bloc littéral multi-lignes
+        const buf=[];while(i+1<lines.length&&(/^\s{2,}\S/.test(lines[i+1])||lines[i+1]==="")){buf.push(lines[i+1].replace(/^\s{2}/,""));i++;}
+        while(buf.length&&buf[buf.length-1]==="")buf.pop();
+        data[key]=buf.join("\n");
+      }else if(v===""){ // liste YAML (lignes « - … » indentées, objets ou simples)
         const arr=[];
-        while(i+1<lines.length&&/^\s*-\s+/.test(lines[i+1])){arr.push(unquote(lines[i+1].replace(/^\s*-\s+/,"").trim()));i++;}
+        while(i+1<lines.length&&/^\s*-\s+/.test(lines[i+1])){
+          let item=lines[i+1].replace(/^\s*-\s+/,"").trim();i++;
+          arr.push(item[0]==="{"?parseInlineObj(item):unquote(item));
+        }
         data[key]=arr.length?arr:"";
       }else data[key]=unquote(v);
     }}
   data.body=body;return data;
 }
+function yamlScalar(v){v=""+v;return /[:#,{}"'\n]/.test(v)?'"'+v.replace(/"/g,"'")+'"':v;}
 function buildMd(fields){
   let fm="---\n";
   for(const def of CURRENT.fields){
@@ -324,14 +383,16 @@ function buildMd(fields){
     let v=fields[def.name];
     if(def.type==="bool"){fm+=`${def.name}: ${v?"true":"false"}\n`;continue;}
     if(def.type==="gallery"){const arr=Array.isArray(v)?v:[];if(!arr.length)continue;fm+=`${def.name}:\n`+arr.map(s=>`  - ${s}\n`).join("");continue;}
+    if(def.type==="grouplist"){const arr=(Array.isArray(v)?v:[]).filter(o=>def.sub.some(s=>o&&o[s.name]));if(!arr.length)continue;fm+=`${def.name}:\n`+arr.map(o=>"  - { "+def.sub.map(s=>`${s.name}: ${yamlScalar(o[s.name]||"")}`).join(", ")+" }").join("\n")+"\n";continue;}
     if(v===undefined||v==="")continue;
-    if(def.type!=="number"&&/[:#"'\n]/.test(v))v='"'+(""+v).replace(/"/g,"'")+'"';
+    if(/\n/.test(v)){fm+=`${def.name}: |\n`+(""+v).split("\n").map(l=>"  "+l).join("\n")+"\n";continue;}
+    if(def.type!=="number"&&/[:#"']/.test(v))v='"'+(""+v).replace(/"/g,"'")+'"';
     fm+=`${def.name}: ${v}\n`;
   }
   return fm+"---\n\n"+(fields.body||"");
 }
 function renderEditor(path,data){
-  newBtn.classList.add("hidden");viewTitle.textContent=(path?"Modifier":"Nouveau")+" — "+CURRENT.label;
+  newBtn.classList.add("hidden");viewTitle.textContent=CURRENT.file?CURRENT.label:((path?"Modifier":"Nouveau")+" — "+CURRENT.label);
   const fld=(def)=>{
     const id="fld_"+def.name,val=data[def.name]!==undefined?data[def.name]:"";
     if(def.type==="bool")return `<div class="field"><label class="check"><input type="checkbox" id="${id}" ${(val===true||val==="true")?"checked":""}> ${esc(def.label)}</label></div>`;
@@ -350,6 +411,11 @@ function renderEditor(path,data){
       <input id="${id}" type="hidden" value='${esc(JSON.stringify(arr))}'>
       <input id="${id}_file" type="file" accept="image/*" multiple class="hidden" onchange="uploadGallery('${id}')">
       ${def.hint?`<div class="hint">${esc(def.hint)}</div>`:''}</div>`;}
+    if(def.type==="grouplist"){const arr=Array.isArray(val)?val:[];return `<div class="field"><label>${esc(def.label)}</label>
+      <div id="${id}_list" class="grouplist"></div>
+      <button type="button" class="btn ghost" onclick="glAdd('${id}')">＋ Ajouter</button>
+      <input id="${id}" type="hidden" value='${esc(JSON.stringify(arr))}'>
+      ${def.hint?`<div class="hint">${esc(def.hint)}</div>`:''}</div>`;}
     let input;
     if(def.type==="textarea"||def.type==="markdown")input=`<textarea id="${id}" ${def.type==="markdown"?'style="min-height:220px"':''}>${esc(val)}</textarea>`;
     else if(def.type==="select")input=`<select id="${id}"><option value="">—</option>${def.options.map(o=>`<option ${o===val?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
@@ -360,11 +426,33 @@ function renderEditor(path,data){
   };
   content.innerHTML=`<div class="editor">${CURRENT.fields.map(fld).join("")}
     <div class="editbar"><button class="btn" id="saveB">${path?"Enregistrer":"Créer"} &amp; publier</button>
-    <button class="btn ghost" onclick="openCollection('${CURRENT.id}')">Annuler</button></div>
+    <button class="btn ghost" onclick="cancelEdit()">Annuler</button></div>
     <p class="hint" style="margin-top:10px">La publication met le site à jour automatiquement (~2 min).</p></div>`;
   document.getElementById("saveB").onclick=()=>saveEntry(path||"");
   CURRENT.fields.filter(f=>f.type==="gallery").forEach(f=>renderGalleryGrid("fld_"+f.name));
+  CURRENT.fields.filter(f=>f.type==="grouplist").forEach(f=>renderGroupList("fld_"+f.name));
 }
+function cancelEdit(){CURRENT&&CURRENT.file?openPage(CURRENT.id):openCollection(CURRENT.id);}
+/* ---- pages « fixes » (un fichier) ---- */
+async function openPage(id){
+  const p=PAGES.find(x=>x.id===id);if(!p)return;CURRENT=p;setActive(id);
+  viewTitle.textContent=p.label;newBtn.classList.add("hidden");
+  content.innerHTML='<div class="center">Chargement…</div>';
+  try{const d=await api("/api/file?path="+encodeURIComponent(p.file));renderEditor(p.file,parseFront(d.content));}
+  catch(e){content.innerHTML=`<div class="center">Erreur : ${esc(e.message)}</div>`;}
+}
+/* ---- listes modifiables (bureau, chiffres…) ---- */
+function glDef(id){const name=id.replace(/^fld_/,"");return CURRENT.fields.find(f=>f.name===name);}
+function glArr(id){try{return JSON.parse(document.getElementById(id).value||"[]")}catch(e){return[]}}
+function glWrite(id,arr){document.getElementById(id).value=JSON.stringify(arr);}
+function renderGroupList(id){
+  const def=glDef(id),box=document.getElementById(id+"_list");if(!def||!box)return;
+  const arr=glArr(id);
+  box.innerHTML=arr.length?arr.map((o,i)=>`<div class="gl-row">${def.sub.map(s=>`<input placeholder="${esc(s.label)}" value="${esc((o&&o[s.name])||"")}" oninput="glEdit('${id}',${i},'${s.name}',this.value)">`).join("")}<button type="button" class="gl-del" title="Retirer" onclick="glDel('${id}',${i})">✕</button></div>`).join(""):'<div class="hint" style="margin-bottom:8px">Aucun élément. Cliquez sur « Ajouter ».</div>';
+}
+function glEdit(id,i,key,value){const a=glArr(id);a[i]=a[i]||{};a[i][key]=value;glWrite(id,a);}
+function glDel(id,i){const a=glArr(id);a.splice(i,1);glWrite(id,a);renderGroupList(id);}
+function glAdd(id){const a=glArr(id);a.push({});glWrite(id,a);renderGroupList(id);}
 function newEntry(){renderEditor("",{});}
 
 /* ---- galerie multi-photos ---- */
@@ -428,14 +516,21 @@ async function editEntry(path){
   content.innerHTML='<div class="center">Chargement…</div>';
   try{const d=await api("/api/file?path="+encodeURIComponent(path));renderEditor(path,parseFront(d.content));}catch(e){toast(e.message);}
 }
+async function dupEntry(path){
+  content.innerHTML='<div class="center">Chargement…</div>';
+  try{const d=await api("/api/file?path="+encodeURIComponent(path));const data=parseFront(d.content);
+    if(CURRENT.titleField&&data[CURRENT.titleField])data[CURRENT.titleField]=data[CURRENT.titleField]+" (copie)";
+    renderEditor("",data);toast("Copie prête — modifiez puis publiez.");
+  }catch(e){toast(e.message);}
+}
 async function saveEntry(path){
   const fields={};
-  for(const def of CURRENT.fields){const inp=document.getElementById("fld_"+def.name);if(!inp)continue;if(def.type==="bool")fields[def.name]=inp.checked;else if(def.type==="gallery"){try{fields[def.name]=JSON.parse(inp.value||"[]")}catch(e){fields[def.name]=[]}}else fields[def.name]=inp.value;}
+  for(const def of CURRENT.fields){const inp=document.getElementById("fld_"+def.name);if(!inp)continue;if(def.type==="bool")fields[def.name]=inp.checked;else if(def.type==="gallery"||def.type==="grouplist"){try{fields[def.name]=JSON.parse(inp.value||"[]")}catch(e){fields[def.name]=[]}}else fields[def.name]=inp.value;}
   fields.body=fields.body||"";
   for(const def of CURRENT.fields){if(def.req&&!fields[def.name]){toast("Champ requis : "+def.label);return;}}
-  let p=path;
+  let p=CURRENT.file||path;
   if(!p){const base=slugify(fields[CURRENT.titleField]||"element");const dp=CURRENT.date&&fields[CURRENT.date]?fields[CURRENT.date].slice(0,10)+"-":"";p=`content/${CURRENT.folder}/${dp}${base}.md`;}
-  try{toast("Publication en cours…");await api("/api/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({path:p,content:buildMd(fields)})});toast("Publié ✓ Le site se met à jour (~2 min).",true);openCollection(CURRENT.id);}catch(e){toast("Erreur : "+e.message);}
+  try{toast("Publication en cours…");await api("/api/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({path:p,content:buildMd(fields)})});toast("Publié ✓ Le site se met à jour (~2 min).",true);CURRENT.file?openPage(CURRENT.id):openCollection(CURRENT.id);}catch(e){toast("Erreur : "+e.message);}
 }
 async function delEntry(path,title){
   if(!confirm("Supprimer « "+title+" » ? Action définitive."))return;

@@ -107,6 +107,10 @@
   .gl-row input{flex:1}
   .gl-del{flex:none;width:34px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:12px}
   .gl-del:hover{background:var(--red);color:#fff;border-color:var(--red)}
+  .drag{cursor:grab;color:var(--faint);font-size:15px;user-select:none;flex:none}
+  .drag:active{cursor:grabbing}
+  .row[draggable]{cursor:default}
+  .row.dragging{opacity:.45;background:var(--panel2)}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#101418;border:1px solid var(--line);padding:12px 18px;border-radius:10px;font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:50}
   .toast.ok{border-color:var(--green-line);color:#a7e9c0}
   .muted{color:var(--muted)}.center{text-align:center;padding:50px 0;color:var(--faint)}
@@ -314,15 +318,36 @@ async function openCollection(id){
     if(CURRENT.date) items.sort((a,b)=>(""+(b.fields[CURRENT.date]||"")).localeCompare(""+(a.fields[CURRENT.date]||"")));
     else items.sort((a,b)=>(+a.fields.order||0)-(+b.fields.order||0));
     if(!items.length){content.innerHTML='<div class="center">Aucun élément. Cliquez sur « Nouveau ».</div>';return;}
-    content.innerHTML=items.map(it=>{
+    const orderable=!CURRENT.date;
+    const rows=items.map((it,i)=>{
       const f=it.fields,title=f[CURRENT.titleField]||it.slug;
       const chip=CURRENT.chip&&f[CURRENT.chip]?`<span class="chip">${esc(f[CURRENT.chip])}</span>`:'<span></span>';
       const date=CURRENT.date&&f[CURRENT.date]?`<span class="date">${fmtDate(f[CURRENT.date])}</span>`:'<span></span>';
       const img=f.image||f.photo||f.logo||f.cover;
       const thumb=img?`<span class="thumb" style="background-image:url('${esc(img)}')"></span>`:`<span class="thumb"></span>`;
-      return `<div class="row"><div class="t">${thumb}<b>${esc(title)}</b></div>${chip}${date}<div class="rowact"><button title="Dupliquer" onclick="dupEntry('${esc(it.path)}')">⧉</button><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
+      const handle=orderable?'<span class="drag" title="Glisser pour réordonner">⠿</span>':'';
+      return `<div class="row"${orderable?` draggable="true" data-idx="${i}"`:""}><div class="t">${handle}${thumb}<b>${esc(title)}</b></div>${chip}${date}<div class="rowact"><button title="Dupliquer" onclick="dupEntry('${esc(it.path)}')">⧉</button><button title="Modifier" onclick="editEntry('${esc(it.path)}')">✎</button><button title="Supprimer" onclick="delEntry('${esc(it.path)}','${esc(title).replace(/'/g,"&#39;")}')">🗑</button></div></div>`;
     }).join("");
+    content.innerHTML=(orderable?'<div class="tl-intro muted">Glissez les lignes (poignée ⠿) pour changer l’ordre d’affichage sur le site.</div>':'')+rows;
+    if(orderable)attachReorder(items);
   }catch(e){content.innerHTML=`<div class="center">Erreur : ${esc(e.message)}</div>`;}
+}
+function rowAfter(y){
+  return [...content.querySelectorAll('.row[draggable]:not(.dragging)')].reduce((cl,el)=>{const b=el.getBoundingClientRect();const off=y-b.top-b.height/2;return(off<0&&off>cl.off)?{off,el}:cl;},{off:-Infinity}).el;
+}
+function attachReorder(items){
+  content.querySelectorAll('.row[draggable]').forEach(row=>{
+    row.addEventListener('dragstart',e=>{row.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    row.addEventListener('dragend',()=>{row.classList.remove('dragging');saveOrder(items);});
+    row.addEventListener('dragover',e=>{e.preventDefault();const cur=content.querySelector('.dragging');if(!cur)return;const after=rowAfter(e.clientY);const ref=after||content.querySelector('.tl-intro')?.nextSibling;after?content.insertBefore(cur,after):content.appendChild(cur);});
+  });
+}
+async function saveOrder(items){
+  const order=[...content.querySelectorAll('.row[draggable]')].map(r=>+r.dataset.idx);
+  const changed=[];order.forEach((oi,pos)=>{const it=items[oi];if((+(it.fields.order||0))!==pos)changed.push({it,pos});});
+  if(!changed.length)return;
+  toast("Enregistrement de l'ordre…");
+  try{for(const {it,pos} of changed){const d=await api("/api/file?path="+encodeURIComponent(it.path));const data=parseFront(d.content);data.order=pos;await api("/api/file",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({path:it.path,content:buildMd(data)})});it.fields.order=pos;}toast("Ordre enregistré ✓",true);}catch(e){toast("Erreur : "+e.message);}
 }
 
 function matchTitle(f){

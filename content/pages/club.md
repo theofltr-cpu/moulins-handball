@@ -14,7 +14,7 @@ bureau:
   - { name: Alexandre CRIDELICH, role: Vice-président }
   - { name: Sandrine WEISSE, role: Secrétaire }
   - { name: Vanessa SAGGIORATO, role: Secrétaire adjointe }
-  - { name: Nicolas BRETNACHET, role: Trésorier }
+  - { name: Nicolas BRETNACHER, role: Trésorier }
   - { name: Audrey MORDENTI, role: Trésorière adjointe }
 chiffres:
   - { valeur: "170", label: Licenciés }

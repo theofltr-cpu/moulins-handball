@@ -1,5 +1,5 @@
 ---
-saison: Saison 2025-2026
+saison: Saison 2026-2027
 championnat: Championnat Honneur Régional
 cta_label: Nous rejoindre
 cta_url: contact.html

@@ -1,6 +1,7 @@
 ---
 name: -15 Filles
 championship: Championnat -15
-coach: À compléter
+coach: Clément
 order: 5
 ---
+

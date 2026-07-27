@@ -149,8 +149,9 @@ export default {
         const { email, password } = await request.json();
         const rec = await env.USERS.get(emailKey(email));
         if (!rec) return json({ error: "E-mail ou mot de passe incorrect." }, 401);
-        const { salt, hash } = JSON.parse(rec);
-        if ((await hashPassword(password || "", salt)) !== hash)
+        let salt, hash;
+        try { ({ salt, hash } = JSON.parse(rec)); } catch (e) { return json({ error: "E-mail ou mot de passe incorrect." }, 401); }
+        if (!salt || (await hashPassword(password || "", salt)) !== hash)
           return json({ error: "E-mail ou mot de passe incorrect." }, 401);
         const token = randHex(24);
         await env.USERS.put("session:" + token, (email || "").trim().toLowerCase(), {

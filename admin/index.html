@@ -262,7 +262,36 @@ function startApp(email){
   COLLECTIONS.forEach(c=>{const b=document.createElement("button");b.textContent=c.label;b.dataset.col=c.id;b.onclick=()=>openCollection(c.id);nav.appendChild(b);});
   const sep=document.createElement("div");sep.className="nav-sep";sep.textContent="Pages du site";nav.appendChild(sep);
   PAGES.forEach(p=>{const b=document.createElement("button");b.textContent=p.label;b.dataset.col=p.id;b.onclick=()=>openPage(p.id);nav.appendChild(b);});
+  const sep2=document.createElement("div");sep2.className="nav-sep";sep2.textContent="Administration";nav.appendChild(sep2);
+  const acc=document.createElement("button");acc.textContent="Gérer les accès";acc.dataset.col="access";acc.onclick=()=>openAccess();nav.appendChild(acc);
   openDashboard();
+}
+async function openAccess(){
+  CURRENT=null;setActive("access");
+  viewTitle.textContent="Gérer les accès";newBtn.classList.add("hidden");
+  content.innerHTML='<div class="center">Chargement…</div>';
+  try{
+    const d=await api("/api/users");const me=d.me,users=d.users||[];
+    const rows=users.map(u=>`<div class="row"><div class="t"><span class="avatar" style="width:28px;height:28px;font-size:11px">${esc((u[0]||"?").toUpperCase())}</span><b>${esc(u)}</b>${u===me?' <span class="chip">vous</span>':""}</div><span></span><span></span><div class="rowact">${u===me?"":`<button title="Retirer l'accès" onclick="delUser('${esc(u).replace(/'/g,"&#39;")}')">🗑</button>`}</div></div>`).join("");
+    content.innerHTML=`<div class="dash-hero"><h3>Gérer les accès</h3><p class="muted">Les personnes ci-dessous peuvent se connecter au backoffice et modifier le site.</p></div>
+      ${rows}
+      <section class="dash-block" style="margin-top:22px;max-width:520px">
+        <h4>Ajouter une personne</h4>
+        <div class="field"><label>Adresse e-mail</label><input id="nu_email" type="email" placeholder="prenom@exemple.fr"></div>
+        <div class="field"><label>Mot de passe (6 caractères minimum)</label><input id="nu_pass" type="text" placeholder="mot de passe à communiquer à la personne"></div>
+        <button class="btn" onclick="addUser()">Créer l'accès</button>
+        <p class="hint" style="margin-top:8px">La personne se connecte ensuite sur /admin avec cet e-mail et ce mot de passe.</p>
+      </section>`;
+  }catch(e){content.innerHTML=`<div class="center">Erreur : ${esc(e.message)}</div>`;}
+}
+async function addUser(){
+  const email=document.getElementById("nu_email").value.trim(),pass=document.getElementById("nu_pass").value;
+  if(!email||!pass){toast("E-mail et mot de passe requis.");return;}
+  try{await api("/api/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pass})});toast("Accès créé ✓ (peut mettre ~1 min à apparaître dans la liste)",true);setTimeout(openAccess,1500);}catch(e){toast("Erreur : "+e.message);}
+}
+async function delUser(email){
+  if(!confirm("Retirer l'accès de « "+email+" » ? La personne ne pourra plus se connecter."))return;
+  try{await api("/api/users?email="+encodeURIComponent(email),{method:"DELETE"});toast("Accès retiré ✓",true);setTimeout(openAccess,1500);}catch(e){toast("Erreur : "+e.message);}
 }
 
 async function openDashboard(){

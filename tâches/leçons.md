@@ -128,3 +128,15 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 - Pour tester une page en ligne sur Cloudflare Pages : utiliser `curl -sL` (suivre les redirections) OU tester directement l'URL sans `.html`.
 - Les liens internes en `.html` fonctionnent quand même (redirigés), mais l'URL canonique servie est **sans extension**.
 - Si le navigateur affiche l'accueil pour une nouvelle page : c'est du cache local sur l'ancienne URL 404 → recharger l'URL propre (`/page`) avec un `?v=timestamp`, ne pas conclure trop vite à un échec de déploiement.
+
+---
+
+## Infrastructure / Ne jamais laisser du code critique dans le scratchpad (2026-07-27)
+
+### Le code d'un service déployé (worker Cloudflare) DOIT vivre dans le dépôt Git
+**Contexte :** le serveur de connexion `moulins-handball-login` (auth du backoffice) avait été créé dans le dossier scratchpad de session. Ce dossier est **vidé entre les sessions** → code source perdu. Impossible de le modifier/rollback ensuite sans risque. Théo : « je ne veux plus que ça arrive ».
+**Règle :**
+- Tout code déployé (workers, scripts d'infra, config wrangler) → **versionné dans le dépôt du projet**, jamais dans /tmp ou scratchpad.
+- Pour un site statique publié : mettre le worker dans un sous-dossier (`worker/`) ET l'exclure de la copie `dist` du build (`copyDir` exclude), pour ne pas le publier.
+- Les **secrets** (tokens) restent côté plateforme (`wrangler secret put`), jamais commités ; ils persistent à travers les redéploiements.
+**Bonus vérifié :** pour redéployer un worker sans casser l'auth live, tester d'abord sur un worker « -staging » (même KV), valider login/sessions/lecture-écriture, puis basculer le nom en prod. Le secret et le binding KV persistent au redéploiement.

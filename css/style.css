@@ -852,20 +852,21 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
 }
-.album {
+.album-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
   background: var(--black-2);
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
 }
+.album-card:hover { border-color: rgba(242, 101, 34, 0.55); transform: translateY(-3px); }
 .album-cover {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  padding: 0;
-  border: 0;
-  cursor: pointer;
+  position: absolute;
+  inset: 0;
   background: #1a1a1a center / cover no-repeat;
 }
 .album-cover::after {
@@ -874,12 +875,12 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   background: linear-gradient(180deg, transparent 25%, rgba(5, 5, 5, 0.9) 100%);
 }
-.album-cover::before {
+.album-card::before {
   content: "Voir l'album →";
   position: absolute;
   top: 14px;
   right: 14px;
-  z-index: 1;
+  z-index: 2;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -891,8 +892,23 @@ a { color: inherit; text-decoration: none; }
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.album:hover .album-cover::before { opacity: 1; }
-.album.open .album-cover::before { content: "Fermer ▲"; opacity: 1; }
+.album-card:hover::before { opacity: 1; }
+
+/* Bandeau de la page d'un album */
+.album-hero {
+  position: relative;
+  min-height: 42vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+.album-hero-overlay { position: absolute; inset: 0; }
+.album-hero-inner { position: relative; z-index: 2; width: 100%; padding-top: 44px; padding-bottom: 44px; }
+.album-back { display: block; width: fit-content; margin-bottom: 16px; color: #fff; }
+.album-hero h1 { font-size: clamp(30px, 5vw, 60px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 1.05; margin: 6px 0; }
+.album-hero-count { color: var(--orange); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 13px; }
+
 .album-info {
   position: absolute;
   left: 18px;

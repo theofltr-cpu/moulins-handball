@@ -259,31 +259,37 @@ function renderPartenaires(items) {
   return `<div class="sponsors-marquee"><div class="sponsors-track">${filled}${filled}</div></div>`;
 }
 
-function renderAlbums(items) {
-  if (!items || items.length === 0) return null;
-  const sorted = items
+function sortedAlbums(items) {
+  return (items || [])
     .slice()
     .sort((a, b) => new Date(b.frontmatter?.date || 0) - new Date(a.frontmatter?.date || 0));
-  return sorted
+}
+// Cartes d'albums (page Photothèque) : chaque carte est un lien vers la page de l'album.
+function renderAlbums(items) {
+  if (!items || items.length === 0) return null;
+  return sortedAlbums(items)
     .map((it) => {
       const fm = it.frontmatter || {};
       const photos = Array.isArray(fm.photos) ? fm.photos.filter(Boolean) : [];
       const cover = fm.cover || photos[0] || "";
       const title = esc(fm.title || "Album");
       const n = photos.length;
-      const thumbs = photos
-        .map(
-          (p) =>
-            `<button type="button" class="album-photo" data-full="${encodeURI(p)}" style="background-image:url('${encodeURI(p)}')" aria-label="Agrandir la photo"></button>`,
-        )
-        .join("");
-      return `<article class="album">
-        <button type="button" class="album-cover" data-album-toggle aria-expanded="false"${cover ? ` style="background-image:url('${encodeURI(cover)}')"` : ""}>
-          <span class="album-info"><span class="album-title">${title}</span><span class="album-count">${n} photo${n > 1 ? "s" : ""}</span></span>
-        </button>
-        <div class="album-photos" hidden>${thumbs}</div>
-      </article>`;
+      return `<a class="album-card" href="/album/${encodeURIComponent(it.slug)}.html">
+        <span class="album-cover"${cover ? ` style="background-image:url('${encodeURI(cover)}')"` : ""}></span>
+        <span class="album-info"><span class="album-title">${title}</span><span class="album-count">${n} photo${n > 1 ? "s" : ""}</span></span>
+      </a>`;
     })
+    .join("");
+}
+// Grille de photos (page d'un album) : chaque photo ouvre la visionneuse.
+function renderAlbumPhotos(photos) {
+  const list = Array.isArray(photos) ? photos.filter(Boolean) : [];
+  if (!list.length) return null;
+  return list
+    .map(
+      (p) =>
+        `<button type="button" class="album-photo" data-full="${encodeURI(p)}" style="background-image:url('${encodeURI(p)}')" aria-label="Agrandir la photo"></button>`,
+    )
     .join("");
 }
 
@@ -714,6 +720,29 @@ function build() {
     console.log(`✓ equipe/${teamSlug}.html`);
   }
 
+  // 4b-bis. Une page par album photo, depuis album.html
+  const albumTpl = fs.readFileSync(path.join(ROOT, "album.html"), "utf8");
+  fs.mkdirSync(path.join(DIST, "album"), { recursive: true });
+  for (const it of albums) {
+    const fm = it.frontmatter || {};
+    const photos = Array.isArray(fm.photos) ? fm.photos.filter(Boolean) : [];
+    const cover = fm.cover || photos[0] || "";
+    const coverStyle = cover
+      ? `background-image:linear-gradient(180deg,rgba(5,5,5,.35),rgba(5,5,5,.9)),url('${encodeURI(cover)}');background-size:cover;background-position:center;`
+      : "background:linear-gradient(135deg,#1a1a1a,#2a1a0a);";
+    const n = photos.length;
+    let page = albumTpl
+      .replace(/(href|src)="(css|img|js)\//g, '$1="/$2/')
+      .replace(/(href)="([a-z-]+\.html)(#[a-z-]+)?"/g, '$1="/$2$3"')
+      .replaceAll("%%TITLE%%", esc(fm.title || "Album"))
+      .replaceAll("%%COUNT%%", `${n} photo${n > 1 ? "s" : ""}`)
+      .replaceAll("%%DATE%%", fm.date ? formatDate(fm.date) : "Photothèque")
+      .replace("%%COVER_STYLE%%", coverStyle);
+    page = injectCms(page, "album-photos", renderAlbumPhotos(photos));
+    fs.writeFileSync(path.join(DIST, "album", `${it.slug}.html`), page);
+    console.log(`✓ album/${it.slug}.html`);
+  }
+
   // 4c. Actualités : VRAIES pages numérotées (6 par page), pas de pagination JS
   {
     const perPage = 6;
@@ -778,6 +807,7 @@ function build() {
   // 5. Fichiers/pages qui ne sont plus servis (gabarits + ancienne page Calendrier)
   fs.rmSync(path.join(DIST, "actualite.html"), { force: true });
   fs.rmSync(path.join(DIST, "equipe.html"), { force: true });
+  fs.rmSync(path.join(DIST, "album.html"), { force: true });
   fs.rmSync(path.join(DIST, "calendrier.html"), { force: true });
   fs.rmSync(path.join(DIST, "js", "cms-render.js"), { force: true });
 

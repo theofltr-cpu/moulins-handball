@@ -1,0 +1,11 @@
+name = "moulins-handball-login"
+main = "src/worker.js"
+compatibility_date = "2026-05-01"
+
+# Base des utilisateurs + sessions du backoffice (namespace KV existant).
+[[kv_namespaces]]
+binding = "USERS"
+id = "e8d3de1e855a4ad7bb6673d9ff232dec"
+
+# Le secret GITHUB_SERVICE_TOKEN est stocké côté Cloudflare (jamais dans le code) :
+#   npx wrangler secret put GITHUB_SERVICE_TOKEN

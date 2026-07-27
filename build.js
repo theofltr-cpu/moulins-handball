@@ -632,6 +632,7 @@ function build() {
     "package-lock.json",
     "tâches",
     "DA.md",
+    "worker",
   ]);
 
   // 2. Chargement des collections

@@ -928,14 +928,15 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 1.5px;
   color: var(--orange);
 }
+.section-album { padding: 36px 0 80px; }
 .album-photos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 6px;
-  padding: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  padding: 0;
 }
 .album-photo {
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   padding: 0;
   border: 0;
   border-radius: 8px;
@@ -977,7 +978,7 @@ a { color: inherit; text-decoration: none; }
 .lightbox-next { position: absolute; right: 6px; }
 @media (max-width: 600px) {
   .lightbox-nav { font-size: 32px; }
-  .album-photos { grid-template-columns: repeat(3, 1fr); }
+  .album-photos { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
 
 /* ========== FOOTER ========== */

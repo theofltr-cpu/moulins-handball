@@ -1,5 +1,5 @@
 ---
-url: https://moulins-handball.pages.dev
+url: https://moulinshandball57.fr
 saison: Saison 2026-2027
 championnat: Championnat Honneur Régional
 cta_label: Nous rejoindre

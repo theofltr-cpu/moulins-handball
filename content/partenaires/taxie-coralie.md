@@ -1,6 +1,6 @@
 ---
 name: Taxie Coralie
-logo: /img/uploads/Plan-de-travail-2-1.webp
+logo: /img/uploads/design-sans-titre.png
 url: "https://taxi-coralie.fr/"
 order: 0
 ---

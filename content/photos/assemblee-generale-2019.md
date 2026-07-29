@@ -1,0 +1,54 @@
+---
+title: Assemblée générale 2019
+photos:
+  - /img/uploads/20190630-125527.jpg
+  - /img/uploads/20190630-125540.jpg
+  - /img/uploads/20190630-125557.jpg
+  - /img/uploads/img-5283.jpg
+  - /img/uploads/img-5286.jpg
+  - /img/uploads/img-5288.jpg
+  - /img/uploads/img-5290.jpg
+  - /img/uploads/img-5294.jpg
+  - /img/uploads/img-5385.jpg
+  - /img/uploads/img-5388.jpg
+  - /img/uploads/img-5399.jpg
+  - /img/uploads/img-5402.jpg
+  - /img/uploads/img-5408.jpg
+  - /img/uploads/img-5409.jpg
+  - /img/uploads/img-5416.jpg
+  - /img/uploads/img-5417.jpg
+  - /img/uploads/img-5419.jpg
+  - /img/uploads/img-5421.jpg
+  - /img/uploads/img-5424.jpg
+  - /img/uploads/img-5426.jpg
+  - /img/uploads/img-5428.jpg
+  - /img/uploads/img-5445.jpg
+  - /img/uploads/img-5447.jpg
+  - /img/uploads/img-5449.jpg
+  - /img/uploads/img-5476.jpg
+  - /img/uploads/img-5477.jpg
+  - /img/uploads/img-5478.jpg
+  - /img/uploads/img-5490.jpg
+  - /img/uploads/img-5491.jpg
+  - /img/uploads/img-5492.jpg
+  - /img/uploads/img-5494.jpg
+  - /img/uploads/img-5495.jpg
+  - /img/uploads/img-5496.jpg
+  - /img/uploads/img-5504.jpg
+  - /img/uploads/img-5511.jpg
+  - /img/uploads/img-5523.jpg
+  - /img/uploads/img-5526.jpg
+  - /img/uploads/img-5532.jpg
+  - /img/uploads/img-5534.jpg
+  - /img/uploads/img-5537.jpg
+  - /img/uploads/img-5573.jpg
+  - /img/uploads/img-5580.jpg
+  - /img/uploads/img-5590.jpg
+  - /img/uploads/img-5595.jpg
+  - /img/uploads/img-5599.jpg
+  - /img/uploads/img-5600.jpg
+  - /img/uploads/img-5602.jpg
+  - /img/uploads/img-5615.jpg
+  - /img/uploads/img-5617.jpg
+---
+

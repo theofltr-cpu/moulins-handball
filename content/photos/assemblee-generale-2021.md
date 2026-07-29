@@ -1,0 +1,56 @@
+---
+title: Assemblée générale 2021
+cover: /img/uploads/img-4109.jpg.jpg
+photos:
+  - /img/uploads/img-4109.jpg-ms5xd3xe.jpg
+  - /img/uploads/img-4110.jpg.jpg
+  - /img/uploads/img-4111.jpg.jpg
+  - /img/uploads/img-4112.jpg.jpg
+  - /img/uploads/img-4113.jpg.jpg
+  - /img/uploads/img-4115.jpg.jpg
+  - /img/uploads/img-4116.jpg.jpg
+  - /img/uploads/img-4117.jpg.jpg
+  - /img/uploads/img-4118.jpg.jpg
+  - /img/uploads/img-4119.jpg.jpg
+  - /img/uploads/img-4120.jpg.jpg
+  - /img/uploads/img-4121.jpg.jpg
+  - /img/uploads/img-4122.jpg.jpg
+  - /img/uploads/img-4123.jpg.jpg
+  - /img/uploads/img-4131.jpg.jpg
+  - /img/uploads/img-4132.jpg.jpg
+  - /img/uploads/img-4133.jpg.jpg
+  - /img/uploads/img-4134.jpg.jpg
+  - /img/uploads/img-4135.jpg.jpg
+  - /img/uploads/img-4136.jpg.jpg
+  - /img/uploads/img-4137.jpg.jpg
+  - /img/uploads/img-4138.jpg.jpg
+  - /img/uploads/img-4139.jpg.jpg
+  - /img/uploads/img-4140.jpg.jpg
+  - /img/uploads/img-4141.jpg.jpg
+  - /img/uploads/img-4142.jpg.jpg
+  - /img/uploads/img-4143.jpg.jpg
+  - /img/uploads/img-4144.jpg.jpg
+  - /img/uploads/img-4145.jpg.jpg
+  - /img/uploads/img-4146.jpg.jpg
+  - /img/uploads/img-4147.jpg.jpg
+  - /img/uploads/img-6756.jpg.jpg
+  - /img/uploads/img-6758.jpg.jpg
+  - /img/uploads/img-6759.jpg.jpg
+  - /img/uploads/img-6760.jpg.jpg
+  - /img/uploads/img-6761.jpg.jpg
+  - /img/uploads/img-6762.jpg.jpg
+  - /img/uploads/img-6763.jpg.jpg
+  - /img/uploads/img-6764.jpg.jpg
+  - /img/uploads/img-6765.jpg.jpg
+  - /img/uploads/img-6766.jpg.jpg
+  - /img/uploads/img-6767.jpg.jpg
+  - /img/uploads/img-6768.jpg.jpg
+  - /img/uploads/img-6769.jpg.jpg
+  - /img/uploads/img-6771.jpg.jpg
+  - /img/uploads/img-6772.jpg.jpg
+  - /img/uploads/img-6773.jpg.jpg
+  - /img/uploads/img-6774.jpg.jpg
+  - /img/uploads/img-6775.jpg.jpg
+  - /img/uploads/img-6776.jpg.jpg
+---
+

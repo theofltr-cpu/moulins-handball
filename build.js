@@ -357,9 +357,11 @@ function renderMatchs(items) {
   const sorted = items
     .slice()
     .sort((a, b) => new Date(a.frontmatter?.date || 0) - new Date(b.frontmatter?.date || 0));
-  const upcoming = sorted
-    .filter((i) => i.frontmatter?.status !== "Joué" && i.frontmatter?.date)
-    .slice(0, 3);
+  // Tous les matchs à venir (non joués, avec date), triés. Le script client
+  // js/next-match.js n'en affiche que les 3 prochains selon la date du jour.
+  const upcoming = sorted.filter(
+    (i) => i.frontmatter?.status !== "Joué" && i.frontmatter?.date,
+  );
   if (upcoming.length === 0) return MATCHS_A_VENIR;
   return upcoming
     .map((item) => {
@@ -368,11 +370,12 @@ function renderMatchs(items) {
       const time = fm.date
         ? new Date(fm.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
         : "";
+      const iso = new Date(fm.date).toISOString();
       const { home, away, homeIsUs } = matchInfo(fm);
       const awayBadge = (away.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       const homeBadge = (home.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       return `
-        <article class="match-card">
+        <article class="match-card" data-date="${iso}">
           <div class="match-card-head">
             <span class="match-comp">${compLabel(fm)}</span>
             <span class="match-date">${dateStr}${time ? " · " + time : ""}</span>

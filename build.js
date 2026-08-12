@@ -375,7 +375,7 @@ function renderMatchs(items) {
       const awayBadge = (away.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       const homeBadge = (home.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       return `
-        <article class="match-card" data-date="${iso}">
+        <article class="match-card" data-date="${iso}" data-cat="${esc(fm.team_category || "")}">
           <div class="match-card-head">
             <span class="match-comp">${compLabel(fm)}</span>
             <span class="match-date">${dateStr}${time ? " · " + time : ""}</span>

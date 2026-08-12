@@ -16,7 +16,6 @@ creneaux:
   - { gymnase: "Gymnase Albert Camus", jour: "Lundi", horaire: "17h30 - 19h00", equipe: "-11 / -15 Filles" }
   - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "17h30 - 19h00", equipe: "-11 / -15 Filles" }
   - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "19h30 - 21h30", equipe: "Séniors Filles" }
-  - { gymnase: "Gymnase Albert Camus", jour: "Jeudi", horaire: "17h30 - 19h30", equipe: "-11 / -15 Filles" }
   - { gymnase: "Gymnase Albert Camus", jour: "Vendredi", horaire: "17h30 - 19h00", equipe: "-13 Garçons" }
   - { gymnase: "Gymnase Albert Camus", jour: "Vendredi", horaire: "19h30 - 21h30", equipe: "Séniors Filles" }
 ---

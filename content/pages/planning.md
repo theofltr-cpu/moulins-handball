@@ -13,10 +13,10 @@ creneaux:
   - { gymnase: "Gymnase Louis Armand", jour: "Jeudi", horaire: "17h30 - 20h00", equipe: "-11 Garçons" }
   - { gymnase: "Gymnase Louis Armand", jour: "Samedi", horaire: "9h30 - 10h30", equipe: "Premiers pas 5/6 ans" }
   - { gymnase: "Gymnase Louis Armand", jour: "Samedi", horaire: "10h30 - 12h00", equipe: "-9 mixte" }
-  - { gymnase: "Gymnase Albert Camus", jour: "Lundi", horaire: "17h30 - 19h00", equipe: "-11 / -13 / -15 Filles" }
-  - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "17h30 - 19h00", equipe: "-11 / -13 / -15 Filles" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Lundi", horaire: "17h30 - 19h00", equipe: "-11 / -15 Filles" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "17h30 - 19h00", equipe: "-11 / -15 Filles" }
   - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "19h30 - 21h30", equipe: "Séniors Filles" }
-  - { gymnase: "Gymnase Albert Camus", jour: "Jeudi", horaire: "17h30 - 19h30", equipe: "" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Jeudi", horaire: "17h30 - 19h30", equipe: "-11 / -15 Filles" }
   - { gymnase: "Gymnase Albert Camus", jour: "Vendredi", horaire: "17h30 - 19h00", equipe: "-13 Garçons" }
   - { gymnase: "Gymnase Albert Camus", jour: "Vendredi", horaire: "19h30 - 21h30", equipe: "Séniors Filles" }
 ---

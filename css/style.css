@@ -461,10 +461,20 @@ a { color: inherit; text-decoration: none; }
 }
 .match-card:hover::before { transform: scaleY(1); }
 
+.match-cat {
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--orange);
+  margin-bottom: 14px;
+}
+
 .match-card-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+  gap: 12px;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
@@ -475,7 +485,7 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--orange);
+  color: var(--gray);
 }
 
 .match-date {

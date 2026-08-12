@@ -376,6 +376,7 @@ function renderMatchs(items) {
       const homeBadge = (home.match(/\b[A-Z]/g) || []).slice(0, 3).join("") || "?";
       return `
         <article class="match-card" data-date="${iso}" data-cat="${esc(fm.team_category || "")}">
+          <div class="match-cat">${esc(fm.team_category || "")}</div>
           <div class="match-card-head">
             <span class="match-comp">${compLabel(fm)}</span>
             <span class="match-date">${dateStr}${time ? " · " + time : ""}</span>
@@ -391,10 +392,7 @@ function renderMatchs(items) {
               <span>${away}</span>
             </div>
           </div>
-          <div class="match-card-foot">
-            <span class="match-place">${fm.venue || ""}</span>
-            <span class="match-link">${fm.team_category || ""}</span>
-          </div>
+          ${fm.venue ? `<div class="match-card-foot"><span class="match-place">${esc(fm.venue)}</span></div>` : ""}
         </article>
       `;
     })

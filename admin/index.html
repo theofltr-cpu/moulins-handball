@@ -228,7 +228,12 @@ const PAGES=[
     {name:"histoire_titre",label:"Titre de la partie « Notre histoire »",type:"text"},
     {name:"histoire",label:"Texte de l'histoire",type:"markdown"},
     {name:"bureau",label:"Le bureau",type:"grouplist",sub:[{name:"name",label:"Nom"},{name:"role",label:"Rôle"}]},
-    {name:"chiffres",label:"Les chiffres du club",type:"grouplist",sub:[{name:"valeur",label:"Valeur (ex. 170)"},{name:"label",label:"Libellé (ex. Licenciés)"}]}]}
+    {name:"chiffres",label:"Les chiffres du club",type:"grouplist",sub:[{name:"valeur",label:"Valeur (ex. 170)"},{name:"label",label:"Libellé (ex. Licenciés)"}]}]},
+  {id:"page_planning",label:"Planning entraînements",file:"content/pages/planning.md",fields:[
+    {name:"hero_title",label:"Titre (1re partie)",type:"text"},
+    {name:"hero_accent",label:"Titre — mot en orange",type:"text"},
+    {name:"intro",label:"Texte d'introduction",type:"textarea"},
+    {name:"creneaux",label:"Créneaux d'entraînement",type:"grouplist",sub:[{name:"equipe",label:"Équipe"},{name:"jour",label:"Jour (Lundi, Mardi…)"},{name:"horaire",label:"Horaire (ex. 18h00 - 19h30)"},{name:"lieu",label:"Lieu / Gymnase"}]}]}
 ];
 let CURRENT=null;
 

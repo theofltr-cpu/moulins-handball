@@ -140,3 +140,21 @@ Résultat : l'utilisateur a créé un compte Netlify, importé son repo, et s'es
 - Pour un site statique publié : mettre le worker dans un sous-dossier (`worker/`) ET l'exclure de la copie `dist` du build (`copyDir` exclude), pour ne pas le publier.
 - Les **secrets** (tokens) restent côté plateforme (`wrangler secret put`), jamais commités ; ils persistent à travers les redéploiements.
 **Bonus vérifié :** pour redéployer un worker sans casser l'auth live, tester d'abord sur un worker « -staging » (même KV), valider login/sessions/lecture-écriture, puis basculer le nom en prod. Le secret et le binding KV persistent au redéploiement.
+
+---
+
+## Contenu daté (calendrier, prochains matchs) : rendre DYNAMIQUE côté client, pas statique au build
+
+**Contexte :** le « Prochain match » de l'accueil était calculé au build (renderMatchs → 3 premiers non-joués). Théo : « il faut que ça soit toujours bien réglé en fonction des journées et que ce soit pas toujours le même match ». Un site statique ne se met pas à jour tout seul entre deux déploiements → le match affiché devient périmé.
+
+**Règle :**
+- Pour tout contenu qui dépend de la DATE DU JOUR (prochain match, prochain événement, compte à rebours…), générer toutes les données au build (avec `data-date`) mais **sélectionner l'affichage côté navigateur en JS** (`new Date()`), pour que ça reste juste sans redéployer.
+- Cf `js/next-match.js` : affiche les 3 prochains matchs à partir d'aujourd'hui, le reste caché.
+
+**Why :** un build statique fige l'état au moment du déploiement ; le temps avance, pas le HTML.
+
+## Publier ce qui est validé — ne pas laisser un travail fini « hors-ligne » sans le dire clairement
+
+**Contexte :** j'avais gardé la page Planning en local (non poussée) après validation, et Théo a dû demander « le planning n'est pas disponible ». J'aurais dû soit publier dès validation, soit rappeler explicitement à chaque échange qu'elle attendait son feu vert.
+
+**How to apply :** quand une fonctionnalité est finie ET validée par l'utilisateur, la publier (ou redemander clairement le go), et ne pas supposer qu'il se souvient qu'elle est en attente.

@@ -231,9 +231,10 @@ const PAGES=[
     {name:"chiffres",label:"Les chiffres du club",type:"grouplist",sub:[{name:"valeur",label:"Valeur (ex. 170)"},{name:"label",label:"Libellé (ex. Licenciés)"}]}]},
   {id:"page_planning",label:"Planning entraînements",file:"content/pages/planning.md",fields:[
     {name:"hero_title",label:"Titre (1re partie)",type:"text"},
-    {name:"hero_accent",label:"Titre — mot en orange",type:"text"},
+    {name:"hero_accent",label:"Titre — mot en orange (ex. 2026-2027)",type:"text"},
     {name:"intro",label:"Texte d'introduction",type:"textarea"},
-    {name:"creneaux",label:"Créneaux d'entraînement",type:"grouplist",sub:[{name:"equipe",label:"Équipe"},{name:"jour",label:"Jour (Lundi, Mardi…)"},{name:"horaire",label:"Horaire (ex. 18h00 - 19h30)"},{name:"lieu",label:"Lieu / Gymnase"}]}]}
+    {name:"gymnases",label:"Gymnases (nom + adresse)",type:"grouplist",sub:[{name:"nom",label:"Nom du gymnase"},{name:"adresse",label:"Adresse"}]},
+    {name:"creneaux",label:"Créneaux d'entraînement",type:"grouplist",sub:[{name:"gymnase",label:"Gymnase"},{name:"jour",label:"Jour (Lundi, Mardi…)"},{name:"horaire",label:"Horaire (ex. 18h00 - 19h30)"},{name:"equipe",label:"Équipe"}]}]}
 ];
 let CURRENT=null;
 

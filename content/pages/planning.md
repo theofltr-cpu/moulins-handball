@@ -1,12 +1,22 @@
 ---
-hero_title: Planning des
-hero_accent: entraînements
-intro: "Retrouvez ci-dessous les créneaux d'entraînement de chaque équipe. Les horaires peuvent évoluer en cours de saison — en cas de doute, contactez votre coach."
+hero_title: Planning des entraînements
+hero_accent: 2026-2027
+intro: "Les créneaux d'entraînement de chaque équipe, par gymnase. Sous réserve de modification en cours de saison."
+gymnases:
+  - { nom: "Gymnase Louis Armand", adresse: "23 rue de Constantine, 57160 Moulins-lès-Metz" }
+  - { nom: "Gymnase Albert Camus", adresse: "1 rue sous la Leye, 57160 Moulins-lès-Metz" }
 creneaux:
-  - { equipe: Séniors Garçons 1, jour: Mardi, horaire: 20h00 - 22h00, lieu: Gymnase Louis Armand }
-  - { equipe: Séniors Garçons 1, jour: Jeudi, horaire: 20h00 - 22h00, lieu: Gymnase Louis Armand }
-  - { equipe: Séniors Filles, jour: Mercredi, horaire: 20h00 - 21h30, lieu: Gymnase Louis Armand }
-  - { equipe: -15 Filles, jour: Lundi, horaire: 18h00 - 19h30, lieu: Gymnase Louis Armand }
-  - { equipe: -13 Garçons, jour: Mercredi, horaire: 17h00 - 18h30, lieu: Gymnase Louis Armand }
-  - { equipe: École de hand (-11), jour: Samedi, horaire: 10h00 - 11h30, lieu: Gymnase Louis Armand }
+  - { gymnase: "Gymnase Louis Armand", jour: "Lundi", horaire: "17h30 - 19h00", equipe: "-13 Garçons" }
+  - { gymnase: "Gymnase Louis Armand", jour: "Lundi", horaire: "20h00 - 22h00", equipe: "Séniors Garçons 2" }
+  - { gymnase: "Gymnase Louis Armand", jour: "Mercredi", horaire: "18h00 - 20h00", equipe: "-17 Garçons" }
+  - { gymnase: "Gymnase Louis Armand", jour: "Mercredi", horaire: "20h00 - 22h00", equipe: "Séniors Garçons 1" }
+  - { gymnase: "Gymnase Louis Armand", jour: "Jeudi", horaire: "17h30 - 20h00", equipe: "-11 Garçons" }
+  - { gymnase: "Gymnase Louis Armand", jour: "Samedi", horaire: "9h30 - 10h30", equipe: "Premiers pas 5/6 ans" }
+  - { gymnase: "Gymnase Louis Armand", jour: "Samedi", horaire: "10h30 - 12h00", equipe: "-9 mixte" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Lundi", horaire: "17h30 - 19h00", equipe: "-11 / -13 / -15 Filles" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "17h30 - 19h00", equipe: "-11 / -13 / -15 Filles" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Mercredi", horaire: "19h30 - 21h30", equipe: "Séniors Filles" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Jeudi", horaire: "17h30 - 19h30", equipe: "" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Vendredi", horaire: "17h30 - 19h00", equipe: "-13 Garçons" }
+  - { gymnase: "Gymnase Albert Camus", jour: "Vendredi", horaire: "19h30 - 21h30", equipe: "Séniors Filles" }
 ---

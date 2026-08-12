@@ -93,34 +93,59 @@ function renderChiffres(list) {
     .join("");
 }
 
-function renderPlanning(list) {
-  if (!Array.isArray(list) || list.length === 0) return null;
+function renderPlanning(page) {
+  const creneaux = Array.isArray(page && page.creneaux) ? page.creneaux : [];
+  if (creneaux.length === 0) return null;
+  const gymList = Array.isArray(page.gymnases) ? page.gymnases : [];
   const ordre = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-  const parJour = new Map();
-  for (const c of list) {
-    if (!c || !(c.equipe || c.horaire)) continue;
-    const j = (c.jour || "Autres").trim();
-    if (!parJour.has(j)) parJour.set(j, []);
-    parJour.get(j).push(c);
+  const adresse = {};
+  gymList.forEach((g) => { if (g && g.nom) adresse[g.nom.trim()] = g.adresse || ""; });
+  // Ordre des gymnases : ceux listés d'abord, puis tout gymnase supplémentaire trouvé.
+  const ordreGym = gymList.map((g) => ((g && g.nom) || "").trim()).filter(Boolean);
+  for (const c of creneaux) {
+    const g = ((c && c.gymnase) || "").trim();
+    if (g && !ordreGym.includes(g)) ordreGym.push(g);
   }
-  const jours = [...parJour.keys()].sort((a, b) => {
+  const trierJours = (a, b) => {
     const ia = ordre.indexOf(a), ib = ordre.indexOf(b);
     return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-  });
-  return jours
-    .map((j) => {
-      const slots = parJour
-        .get(j)
-        .map(
-          (c) => `
-          <div class="planning-slot">
-            <span class="ps-team">${c.equipe || ""}</span>
-            <span class="ps-time">${c.horaire || ""}</span>
-            <span class="ps-place">${c.lieu || ""}</span>
-          </div>`,
-        )
-        .join("");
-      return `<div class="planning-day"><h3 class="planning-jour">${j}</h3><div class="planning-slots">${slots}</div></div>`;
+  };
+  return ordreGym
+    .map((gym) => {
+      const list = creneaux.filter(
+        (c) => ((c && c.gymnase) || "").trim() === gym && (c.horaire || c.equipe),
+      );
+      if (!list.length) return "";
+      const jours = [...new Set(list.map((c) => (c.jour || "").trim()).filter(Boolean))].sort(trierJours);
+      const slotsByDay = {};
+      let maxRows = 0;
+      jours.forEach((j) => {
+        slotsByDay[j] = list.filter((c) => (c.jour || "").trim() === j);
+        maxRows = Math.max(maxRows, slotsByDay[j].length);
+      });
+      const head = jours.map((j) => `<th>${esc(j)}</th>`).join("");
+      let body = "";
+      for (let r = 0; r < maxRows; r++) {
+        body +=
+          "<tr>" +
+          jours
+            .map((j) => {
+              const s = slotsByDay[j][r];
+              if (!s) return `<td class="pt-empty"></td>`;
+              const team = s.equipe ? `<span class="pt-team">${esc(s.equipe)}</span>` : "";
+              return `<td><span class="pt-time">${esc(s.horaire || "")}</span>${team}</td>`;
+            })
+            .join("") +
+          "</tr>";
+      }
+      const adr = adresse[gym] ? `<p class="pg-adresse">${esc(adresse[gym])}</p>` : "";
+      return `<div class="planning-gym">
+        <div class="pg-head"><h3>${esc(gym)}</h3>${adr}</div>
+        <div class="pg-table-wrap"><table class="planning-table">
+          <thead><tr>${head}</tr></thead>
+          <tbody>${body}</tbody>
+        </table></div>
+      </div>`;
     })
     .join("");
 }
@@ -696,7 +721,7 @@ function build() {
     },
     "photos.html": (html) => injectCms(html, "albums", renderAlbums(albums)),
     "planning.html": (html) => {
-      html = injectCms(html, "planning", renderPlanning(planningPage.creneaux));
+      html = injectCms(html, "planning", renderPlanning(planningPage));
       html = html.replace("%%PLANNING_INTRO%%", esc(planningPage.intro || ""));
       html = html.replace("%%PLANNING_TITLE%%", esc(planningPage.hero_title || "Planning des"));
       html = html.replace("%%PLANNING_ACCENT%%", esc(planningPage.hero_accent || "entraînements"));

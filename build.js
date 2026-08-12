@@ -93,6 +93,38 @@ function renderChiffres(list) {
     .join("");
 }
 
+function renderPlanning(list) {
+  if (!Array.isArray(list) || list.length === 0) return null;
+  const ordre = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+  const parJour = new Map();
+  for (const c of list) {
+    if (!c || !(c.equipe || c.horaire)) continue;
+    const j = (c.jour || "Autres").trim();
+    if (!parJour.has(j)) parJour.set(j, []);
+    parJour.get(j).push(c);
+  }
+  const jours = [...parJour.keys()].sort((a, b) => {
+    const ia = ordre.indexOf(a), ib = ordre.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
+  return jours
+    .map((j) => {
+      const slots = parJour
+        .get(j)
+        .map(
+          (c) => `
+          <div class="planning-slot">
+            <span class="ps-team">${c.equipe || ""}</span>
+            <span class="ps-time">${c.horaire || ""}</span>
+            <span class="ps-place">${c.lieu || ""}</span>
+          </div>`,
+        )
+        .join("");
+      return `<div class="planning-day"><h3 class="planning-jour">${j}</h3><div class="planning-slots">${slots}</div></div>`;
+    })
+    .join("");
+}
+
 function applyTokens(html, map) {
   return html.replace(/\{\{([a-z0-9_.]+)\}\}/gi, (m, key) => (key in map ? map[key] : m));
 }
@@ -648,6 +680,7 @@ function build() {
   const partenaires = loadCollection("partenaires");
   const albums = loadCollection("photos");
   const clubPage = readPage("club.md");
+  const planningPage = readPage("planning.md");
   console.log(
     `Contenus : ${actualites.length} actu(s), ${equipes.length} équipe(s), ${matchs.length} match(s)`,
   );
@@ -662,6 +695,13 @@ function build() {
       return html;
     },
     "photos.html": (html) => injectCms(html, "albums", renderAlbums(albums)),
+    "planning.html": (html) => {
+      html = injectCms(html, "planning", renderPlanning(planningPage.creneaux));
+      html = html.replace("%%PLANNING_INTRO%%", esc(planningPage.intro || ""));
+      html = html.replace("%%PLANNING_TITLE%%", esc(planningPage.hero_title || "Planning des"));
+      html = html.replace("%%PLANNING_ACCENT%%", esc(planningPage.hero_accent || "entraînements"));
+      return html;
+    },
   };
   // Section "Nos équipes" de l'accueil : dynamique comme la page Équipes
   pages["index.html"] = (html) => {

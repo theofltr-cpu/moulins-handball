@@ -23,7 +23,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+body { overflow-x: clip; }
 
 body {
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -2100,8 +2101,10 @@ a { color: inherit; text-decoration: none; }
   .news-featured-img { min-height: 280px; }
   .contact-split { grid-template-columns: 1fr; gap: 48px; }
   .venues-grid { grid-template-columns: 1fr; }
-  .cal-row { grid-template-columns: 80px 1fr; gap: 16px; }
-  .cal-comp, .cal-teams, .cal-place, .cal-link { grid-column: 2; }
+  .cal-row { grid-template-columns: 76px 1fr; gap: 14px; padding: 18px 16px; }
+  .cal-comp, .cal-teams, .cal-place, .cal-link { grid-column: 2; min-width: 0; }
+  .cal-teams { flex-wrap: wrap; gap: 6px 12px; font-size: 13px; }
+  .cal-team { overflow-wrap: anywhere; }
   .fed-card { grid-template-columns: 1fr; }
 
   /* --- Menu en burger dès la tablette (évite le débordement du header) --- */
